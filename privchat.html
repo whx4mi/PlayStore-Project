@@ -70,7 +70,7 @@
       <p class="protect-message" id="protectMessage">Analisando o arquivo antes de iniciar o download…</p>
       <div class="protect-track" id="protectTrack" role="progressbar" aria-label="Progresso da verificação" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="protect-progress" id="protectProgress"></div></div>
       <div class="protect-meta"><span id="protectPercent">0%</span><span>PrivChat.apk</span></div>
-      <p class="protect-note" id="protectNote">Aguarde assim que terminarmos de analisar o aplicativo.</p>
+      <p class="protect-note" id="protectNote">Simulação visual para esta demonstração. Esta página não realiza uma análise real do Google Play Protect.</p>
       <button class="protect-cancel" id="protectCancel" type="button">Cancelar</button>
     </div>
   </div>
@@ -91,7 +91,7 @@
     function updateProgress(value){const progress=Math.max(0,Math.min(100,Math.round(value)));protectProgress.style.width=`${progress}%`;protectPercent.textContent=`${progress}%`;protectTrack.setAttribute('aria-valuenow',String(progress))}
     function closeProtect(){verificationRun++;protectModal.classList.remove('open');protectModal.setAttribute('aria-hidden','true');document.body.style.overflow='';downloadButton.disabled=false;downloadButton.textContent='Instalar';downloadButton.focus()}
     function openProtect(){protectTitle.textContent='Verificando aplicativo com Play Protect';protectMessage.textContent='Analisando o arquivo antes de iniciar o download…';protectTrack.classList.remove('error');protectCancel.textContent='Cancelar';updateProgress(0);protectModal.classList.add('open');protectModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';downloadButton.disabled=true;downloadButton.textContent='Verificando…';protectCancel.focus()}
-    function simulateProgress(runId){return new Promise(resolve=>{const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;const duration=reduced?1000:3400;const started=performance.now();const timer=setInterval(()=>{if(runId!==verificationRun){clearInterval(timer);resolve(false);return}const elapsed=performance.now()-started;const ratio=Math.min(elapsed/duration,1);const eased=1-Math.pow(1-ratio,2.2);updateProgress(Math.min(96,eased*100));if(ratio>=1){clearInterval(timer);resolve(true)}},80)})}
+    function simulateProgress(runId){return new Promise(resolve=>{const duration=5000;const started=performance.now();const timer=setInterval(()=>{if(runId!==verificationRun){clearInterval(timer);resolve(false);return}const elapsed=performance.now()-started;const ratio=Math.min(elapsed/duration,1);const eased=1-Math.pow(1-ratio,2.2);updateProgress(Math.min(96,eased*100));if(ratio>=1){clearInterval(timer);resolve(true)}},80)})}
     function startDownload(){const link=document.createElement('a');link.href='./app.apk';link.download='PrivChat.apk';document.body.appendChild(link);link.click();link.remove()}
 
     downloadButton.addEventListener('click',async()=>{

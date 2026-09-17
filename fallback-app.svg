@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">Imagem indisponível</title>
+  <desc id="desc">Ícone genérico usado quando uma imagem não pode ser carregada.</desc>
+  <rect width="512" height="512" rx="104" fill="#eef7f2"/>
+  <path d="M154 128c-25 0-46 21-46 46v164c0 25 21 46 46 46h204c25 0 46-21 46-46V174c0-25-21-46-46-46H154Zm0 28h204c10 0 18 8 18 18v122l-62-62a20 20 0 0 0-28 0l-41 41-24-24a20 20 0 0 0-28 0l-57 57V174c0-10 8-18 18-18Zm222 182c0 10-8 18-18 18H154c-8 0-14-4-17-10l70-70 24 24a20 20 0 0 0 28 0l41-41 76 76v3Z" fill="#01875f"/>
+  <circle cx="202" cy="210" r="28" fill="#77c6a7"/>
+</svg>

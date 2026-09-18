@@ -60,8 +60,8 @@ def database() -> Iterator[sqlite3.Connection]:
     connection = sqlite3.connect(DATABASE_PATH, timeout=10)
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA foreign_keys = ON")
-    connection.execute("PRAGMA journal_mode = WAL")
     connection.execute("PRAGMA busy_timeout = 10000")
+    connection.execute("PRAGMA journal_mode = WAL")
     try:
         yield connection
         connection.commit()
@@ -146,7 +146,8 @@ def init_database() -> None:
 
 
 def ensure_app_columns(connection: sqlite3.Connection) -> None:
-    """Aplica migrações aditivas simples em bancos já existentes."""
+    """Aplica migrações aditivas, serializando workers concorrentes."""
+    connection.execute("BEGIN IMMEDIATE")
     existing = {row["name"] for row in connection.execute("PRAGMA table_info(apps)").fetchall()}
     additions = {
         "rating_5_pct": "REAL NOT NULL DEFAULT 83.0",

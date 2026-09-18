@@ -12,8 +12,7 @@
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="{{ asset_base }}" aria-label="Voltar à loja"><svg class="playmark" viewBox="0 0 32 36" aria-hidden="true"><path fill="#00d17a" d="M2 2l18 16L2 34z"/><path fill="#0185ff" d="M2 2l21 12-3 4z"/><path fill="#ffca28" d="M20 18l3 4L2 34z"/><path fill="#ff4b55" d="M23 14l7 4-7 4-3-4z"/></svg><span>Google Play</span></a>
-    <nav class="topnav" aria-label="Categorias"><a href="{{ asset_base }}">Jogos</a><a class="active" href="{{ asset_base }}category.html?tab=apps">Apps</a><a href="{{ asset_base }}category.html?tab=movies">Filmes e TV</a><a href="{{ asset_base }}category.html?tab=books">Livros</a><a href="{{ asset_base }}category.html?tab=kids">Crianças</a></nav>
+    <a class="brand" href="{{ detail_url }}" aria-label="Voltar para o {{ app.name }}"><svg class="playmark" viewBox="0 0 32 36" aria-hidden="true"><path fill="#00d17a" d="M2 2l18 16L2 34z"/><path fill="#0185ff" d="M2 2l21 12-3 4z"/><path fill="#ffca28" d="M20 18l3 4L2 34z"/><path fill="#ff4b55" d="M23 14l7 4-7 4-3-4z"/></svg><span>Google Play</span></a>
     <div class="actions"><span class="help-dot" aria-label="Ajuda">?</span></div>
   </header>
   <main class="page">
@@ -24,18 +23,17 @@
     </section>
     <div class="layout">
       <article>
-         <p class="intro">Esses passos são necessários para garantir o pleno <strong>funcionamento</strong> do aplicativo no seu dispositivo.</p>
         <p class="intro">Encontre abaixo o sintoma que você está vendo e siga as etapas. Comece sempre confirmando que o download foi concluído.</p>
         <section class="issue"><h2>O download não começou</h2><ol><li>Abra a área de downloads do seu dispositivo e procure por <strong>{{ app.download_filename }}</strong>.</li><li>Confirme que o dispositivo está conectado à internet.</li><li>Volte à página do aplicativo e toque em <strong>Instalar</strong> novamente.</li></ol></section>
         <section class="issue"><h2>O arquivo foi baixado parcialmente ou não abre</h2><p>Uma interrupção de rede pode deixar o arquivo incompleto. Exclua somente o download incompleto, confira a conexão e faça um novo download pela página do {{ app.name }}.</p></section>
         <section class="issue"><h2>Não há espaço suficiente</h2><p>Libere espaço no dispositivo removendo apenas arquivos e aplicativos que você não precisa. Depois, reinicie o download.</p></section>
-        <section class="issue"><h2>O dispositivo não é compatível</h2><p>O {{ app.name }} requer Android {{ app.minimum_android }} ou superior. Confira a versão do Android nas configurações do aparelho e mantenha o sistema atualizado.</p></section>
-        <section class="issue"><h2>O Android bloqueou a instalação</h2><p>Não desative o Google Play Protect e não ignore alertas graves de segurança. Confirme que o arquivo se chama <strong>{{ app.download_filename }}</strong> e que foi obtido diretamente desta página.</p><p>Se você confia na origem e o Android apenas solicitar autorização para instalar aplicativos por esse navegador, abra a configuração indicada pelo próprio sistema e permita somente para esse aplicativo de origem. Revogue a permissão depois da instalação.</p><p>Se o Android informar que o arquivo é perigoso, adulterado ou incompatível, interrompa a instalação e faça um novo download.</p></section>
+        <section class="issue"><h2>O dispositivo não é compatível</h2><p>Esta demonstração informa compatibilidade com Android {{ app.minimum_android }} ou superior. Confira a versão do Android nas configurações do aparelho e mantenha o sistema atualizado.</p></section>
+        <section class="issue"><h2>O Android bloqueou a instalação</h2><p>Confirme que o arquivo se chama <strong>{{ app.download_filename }}</strong> e que foi obtido diretamente desta página. Mantenha o Google Play Protect ativo. Se o Android apenas solicitar autorização para instalar aplicativos por este navegador, use a configuração indicada pelo próprio sistema somente quando confiar no arquivo e revogue essa permissão depois da instalação.</p></section>
         <section class="issue"><h2>Já existe outra versão instalada</h2><p>Versões assinadas por desenvolvedores diferentes podem entrar em conflito. Faça backup dos dados importantes e procure uma versão compatível fornecida pela mesma origem da instalação existente.</p></section>
-        <div class="warning"><strong>Ainda não resolveu?</strong>Reinicie o dispositivo e tente novamente.</div>
+        <div class="warning"><strong>Ainda não resolveu?</strong>Reinicie o dispositivo e tente novamente. Se o Android identificar o arquivo como perigoso, interrompa a instalação.</div>
       </article>
       <aside>
-        <div class="side-card"><h2>Tente novamente</h2><p>Retorne à página do aplicativo para iniciar um novo download.</p><a class="button primary" href="{{ detail_url }}">Voltar para o {{ app.name }}</a><a class="button secondary" href="{{ asset_base }}">Ir para a loja</a><p class="demo-note">Algum dos passos descritos lhe ajudou? Tente o download novamente.</p></div>
+        <div class="side-card"><h2>Tente novamente</h2><p>Retorne à página do aplicativo para iniciar um novo download.</p><a class="button primary" href="{{ detail_url }}">Voltar para o {{ app.name }}</a><p class="demo-note">Algum dos passos descritos lhe ajudou? Tente o Download novamente.</p></div>
       </aside>
     </div>
   </main>

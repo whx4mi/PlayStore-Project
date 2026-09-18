@@ -21,11 +21,8 @@ paths = [
     "/store",
     "/store/",
     "/store/index.html",
-    "/store/privchat.html",
-    "/store/ajuda-instalacao.html",
     "/store/apps/privchat/",
     "/store/apps/privchat/ajuda/",
-    "/store/category.html?tab=apps",
     "/store/health",
     "/store/admin/",
     "/store/admin/login",
@@ -44,6 +41,7 @@ response = client.post(
 )
 assert response.status_code == 200
 assert b"Aplicativos" in response.data
+assert b"Cada item publicado possui uma p\xc3\xa1gina de download" in response.data
 assert client.head("/store/download/privchat/").status_code == 200
 assert client.get("/store/server.py").status_code == 404
 assert client.get("/store/tests/smoke_test.py").status_code == 404
@@ -70,8 +68,6 @@ created = client.post(
         "rating_count_label": "120 avaliações",
         "downloads_label": "500+",
         "published": "1",
-        "featured": "1",
-        "priority": "0",
     },
     follow_redirects=True,
 )
@@ -82,17 +78,48 @@ assert detail.status_code == 200
 assert b"Aplicativo de Teste" in detail.data
 assert b"width:70.0%" in detail.data
 assert b'href="./ajuda/"' in detail.data
+assert b"Verificando aplicativo com Google Play Protect" in detail.data
+assert b"Esta verifica\xc3\xa7\xc3\xa3o \xc3\xa9 uma simula\xc3\xa7\xc3\xa3o visual" in detail.data
 assert b"{%" not in detail.data and b"{{" not in detail.data
 help_page = client.get("/store/apps/aplicativo-teste/ajuda/")
 assert help_page.status_code == 200
 assert b"Ajuda para instalar o Aplicativo de Teste" in help_page.data
 assert b"Aplicativo de Teste.apk" in help_page.data
-assert b"desative o Google Play Protect" in help_page.data
+assert b"Mantenha o Google Play Protect ativo" in help_page.data
+assert b"Desabilite" not in help_page.data
 assert b"{%" not in help_page.data and b"{{" not in help_page.data
+help_text = help_page.get_data(as_text=True)
+fixed_help_phrases = [
+    "Encontre abaixo o sintoma que você está vendo e siga as etapas. Comece sempre confirmando que o download foi concluído.",
+    "Uma interrupção de rede pode deixar o arquivo incompleto. Exclua somente o download incompleto, confira a conexão e faça um novo download pela página do Aplicativo de Teste.",
+    "Libere espaço no dispositivo removendo apenas arquivos e aplicativos que você não precisa. Depois, reinicie o download.",
+    "Esta demonstração informa compatibilidade com Android 8.0 ou superior. Confira a versão do Android nas configurações do aparelho e mantenha o sistema atualizado.",
+    "Versões assinadas por desenvolvedores diferentes podem entrar em conflito. Faça backup dos dados importantes e procure uma versão compatível fornecida pela mesma origem da instalação existente.",
+    "Reinicie o dispositivo e tente novamente. Se o Android identificar o arquivo como perigoso, interrompa a instalação.",
+]
+assert all(phrase in help_text for phrase in fixed_help_phrases)
 home = client.get("/store/")
-assert home.status_code == 200
-assert home.data.index(b"Aplicativo de Teste") < home.data.index(b"Balatro")
-assert b"{%" not in home.data and b"{{" not in home.data
+assert home.status_code == 302
+assert home.headers["Location"].endswith("/store/admin/")
+assert client.get("/store/index.html").status_code == 302
+assert client.get("/store/category.html?tab=apps").status_code == 404
+legacy_detail = client.get("/store/privchat.html")
+assert legacy_detail.status_code == 308
+assert legacy_detail.headers["Location"].endswith("/store/apps/privchat/")
+legacy_help = client.get("/store/ajuda-instalacao.html")
+assert legacy_help.status_code == 308
+assert legacy_help.headers["Location"].endswith("/store/apps/privchat/ajuda/")
+
+dashboard = client.get("/store/admin/")
+assert dashboard.status_code == 200
+assert b"/store/apps/aplicativo-teste/" in dashboard.data
+assert b"Copiar URL" in dashboard.data
+assert b"Abrir guia" in dashboard.data
+proxied_dashboard = client.get(
+    "/store/admin/",
+    headers={"X-Forwarded-Proto": "https", "X-Forwarded-Host": "apps.exemplo.test"},
+)
+assert b"https://apps.exemplo.test/store/apps/aplicativo-teste/" in proxied_dashboard.data
 
 invalid_distribution = client.post(
     "/store/admin/apps/new",

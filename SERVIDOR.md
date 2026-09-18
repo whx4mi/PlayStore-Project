@@ -1,10 +1,13 @@
-# Servidor da loja pessoal
+# Servidor das páginas de aplicativos
 
-A loja e o painel são servidos exclusivamente sob `/store/`:
+O gerenciador e as páginas são servidos exclusivamente sob `/store/`:
 
-- Loja: `https://seu-dominio/store/`
+- Entrada do gerenciador: `https://seu-dominio/store/`
 - Painel: `https://seu-dominio/store/admin/`
 - Aplicativo: `https://seu-dominio/store/apps/<identificador>/`
+- Guia: `https://seu-dominio/store/apps/<identificador>/ajuda/`
+
+Não existe mais uma vitrine pública com vários aplicativos. A rota `/store/` leva ao painel, e cada aplicativo publicado é compartilhado pela sua URL direta exibida no gerenciador.
 
 O painel não possui senha padrão. Se nenhuma credencial for configurada, a tela de login permanece bloqueada.
 

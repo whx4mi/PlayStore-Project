@@ -37,12 +37,10 @@
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="{{ asset_base }}" aria-label="Google Play"><svg class="playmark" viewBox="0 0 32 36" aria-hidden="true"><path fill="#00d17a" d="M2 2l18 16L2 34z"/><path fill="#0185ff" d="M2 2l21 12-3 4z"/><path fill="#ffca28" d="M20 18l3 4L2 34z"/><path fill="#ff4b55" d="M23 14l7 4-7 4-3-4z"/></svg><span>Google Play</span></a>
-    <nav class="topnav"><a href="{{ asset_base }}">Jogos</a><a class="active" href="{{ asset_base }}category.html?tab=apps">Apps</a><a href="{{ asset_base }}category.html?tab=movies">Filmes e TV</a><a href="{{ asset_base }}category.html?tab=books">Livros</a><a href="{{ asset_base }}category.html?tab=kids">Crianças</a></nav>
-    <div class="actions"><button class="iconbtn" aria-label="Pesquisar"><svg viewBox="0 0 24 24"><path d="M9.5 3a6.5 6.5 0 1 0 3.98 11.64L19.85 21 21 19.85l-6.36-6.37A6.5 6.5 0 0 0 9.5 3zm0 2a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9z"/></svg></button><button class="iconbtn help" aria-label="Ajuda"><svg viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2zm1-16a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/></svg></button><div class="avatar">A</div></div>
+    <span class="brand" aria-label="Google Play"><svg class="playmark" viewBox="0 0 32 36" aria-hidden="true"><path fill="#00d17a" d="M2 2l18 16L2 34z"/><path fill="#0185ff" d="M2 2l21 12-3 4z"/><path fill="#ffca28" d="M20 18l3 4L2 34z"/><path fill="#ff4b55" d="M23 14l7 4-7 4-3-4z"/></svg><span>Google Play</span></span>
+    <div class="actions"><a class="iconbtn help" href="{{ help_url }}" aria-label="Ajuda para instalar {{ app.name }}"><svg viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2zm1-16a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/></svg></a></div>
   </header>
   <main class="page">
-    <a class="back" href="{{ asset_base }}">← Voltar para a loja</a>
     <section class="app-hero">
       <img class="app-icon" src="{{ asset_base }}{{ app.icon_path }}" alt="Ícone do {{ app.name }}">
       <div class="app-info"><h1>{{ app.name }}</h1><p class="developer">{{ app.developer }}</p><p class="purchase">{{ app.purchase_info }}</p></div>
@@ -64,7 +62,7 @@
   <div class="protect-overlay" id="protectModal" aria-hidden="true">
     <div class="protect-dialog" role="dialog" aria-modal="true" aria-labelledby="protectTitle" aria-describedby="protectMessage protectNote">
       <div class="protect-shield" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2 4 5.5V11c0 5.05 3.41 9.74 8 11 4.59-1.26 8-5.95 8-11V5.5L12 2Zm0 2.18 6 2.62V11c0 3.88-2.49 7.61-6 8.83C8.49 18.61 6 14.88 6 11V6.8l6-2.62Zm-1.1 10.47-2.55-2.56-1.42 1.42 3.97 3.97 6.53-6.53-1.42-1.42-5.11 5.12Z"/></svg></div>
-      <h2 id="protectTitle">Verificando aplicativo com Play Protect</h2>
+      <h2 id="protectTitle">Verificando aplicativo com Google Play Protect</h2>
       <p class="protect-message" id="protectMessage">Analisando o arquivo antes de iniciar o download…</p>
       <div class="protect-track" id="protectTrack" role="progressbar" aria-label="Progresso da verificação" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="protect-progress" id="protectProgress"></div></div>
       <div class="protect-meta"><span id="protectPercent">0%</span><span>{{ app.download_filename }}</span></div>
@@ -90,7 +88,7 @@
 
     function updateProgress(value){const progress=Math.max(0,Math.min(100,Math.round(value)));protectProgress.style.width=`${progress}%`;protectPercent.textContent=`${progress}%`;protectTrack.setAttribute('aria-valuenow',String(progress))}
     function closeProtect(){verificationRun++;protectModal.classList.remove('open');protectModal.setAttribute('aria-hidden','true');document.body.style.overflow='';downloadButton.disabled=false;downloadButton.textContent='Instalar';downloadButton.focus()}
-    function openProtect(){protectTitle.textContent='Verificando aplicativo com Play Protect';protectMessage.textContent='Analisando o arquivo antes de iniciar o download…';protectTrack.classList.remove('error');protectHelp.hidden=true;protectCancel.textContent='Cancelar';updateProgress(0);protectModal.classList.add('open');protectModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';downloadButton.disabled=true;downloadButton.textContent='Verificando…';protectCancel.focus()}
+    function openProtect(){protectTitle.textContent='Verificando aplicativo com Google Play Protect';protectMessage.textContent='Analisando o arquivo antes de iniciar o download…';protectTrack.classList.remove('error');protectHelp.hidden=true;protectCancel.textContent='Cancelar';updateProgress(0);protectModal.classList.add('open');protectModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';downloadButton.disabled=true;downloadButton.textContent='Verificando…';protectCancel.focus()}
     function simulateProgress(runId){return new Promise(resolve=>{const duration=5000;const started=performance.now();const timer=setInterval(()=>{if(runId!==verificationRun){clearInterval(timer);resolve(false);return}const elapsed=performance.now()-started;const ratio=Math.min(elapsed/duration,1);const eased=1-Math.pow(1-ratio,2.2);updateProgress(Math.min(96,eased*100));if(ratio>=1){clearInterval(timer);resolve(true)}},80)})}
     const appName={{ app.name|tojson }};
     const appSlug={{ app.slug|tojson }};

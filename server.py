@@ -31,6 +31,7 @@ from flask import (
     url_for,
 )
 from werkzeug.security import check_password_hash
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -43,6 +44,7 @@ IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
 APK_EXTENSIONS = {".apk"}
 
 app = Flask(__name__, template_folder=str(BASE_DIR), static_folder=None)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 app.config.update(
     SECRET_KEY=os.environ.get("STORE_SECRET_KEY") or secrets.token_hex(32),
     MAX_CONTENT_LENGTH=int(os.environ.get("STORE_MAX_UPLOAD_MB", "500")) * 1024 * 1024,
@@ -61,7 +63,13 @@ def database() -> Iterator[sqlite3.Connection]:
     connection.row_factory = sqlite3.Row
     connection.execute("PRAGMA foreign_keys = ON")
     connection.execute("PRAGMA busy_timeout = 10000")
-    connection.execute("PRAGMA journal_mode = WAL")
+    try:
+        connection.execute("PRAGMA journal_mode = WAL")
+    except sqlite3.OperationalError as error:
+        # Outro worker pode estar ativando o WAL durante o primeiro boot.
+        if "locked" not in str(error).lower():
+            connection.close()
+            raise
     try:
         yield connection
         connection.commit()
@@ -239,18 +247,6 @@ def get_app(slug: str, include_drafts: bool = False) -> dict[str, Any] | None:
         return row_to_app(row, reviews)
 
 
-def public_apps() -> list[dict[str, Any]]:
-    with database() as connection:
-        rows = connection.execute(
-            """
-            SELECT * FROM apps
-            WHERE published = 1 AND real_app = 1
-            ORDER BY featured DESC, priority ASC, created_at DESC
-            """
-        ).fetchall()
-        return [row_to_app(row) for row in rows]
-
-
 def admin_configured() -> bool:
     return bool(os.environ.get("STORE_ADMIN_PASSWORD_HASH") or os.environ.get("STORE_ADMIN_PASSWORD"))
 
@@ -388,8 +384,6 @@ def app_payload(existing: sqlite3.Row | None = None) -> dict[str, Any]:
         "showcase_title": form_text("showcase_title", name),
         "safety_text": form_text("safety_text", "Verifique as permissões solicitadas antes de instalar."),
         "published": 1 if request.form.get("published") == "1" else 0,
-        "featured": 1 if request.form.get("featured") == "1" else 0,
-        "priority": max(0, form_int("priority", 100)),
     }
 
 
@@ -423,9 +417,8 @@ def store_redirect() -> Any:
 @app.route(f"{DEFAULT_PREFIX}/")
 @app.route(f"{DEFAULT_PREFIX}/index.html")
 def store_home() -> Any:
-    real_apps = public_apps()
-    featured_app = next((item for item in real_apps if item["featured"]), real_apps[0] if real_apps else None)
-    return render_template("index.html", real_apps=real_apps, featured_app=featured_app)
+    """A antiga vitrine foi substituída pelo gerenciador de páginas."""
+    return redirect(url_for("admin_dashboard"))
 
 
 @app.route(f"{DEFAULT_PREFIX}/apps/<slug>/")
@@ -448,22 +441,12 @@ def app_install_help(slug: str) -> Any:
 
 @app.route(f"{DEFAULT_PREFIX}/privchat.html")
 def legacy_privchat() -> Any:
-    selected = get_app("privchat")
-    if selected is None:
-        return render_template("404.html"), 404
-    return render_template(
-        "privchat.html", app=selected, asset_base="./", help_url="./ajuda-instalacao.html"
-    )
+    return redirect(url_for("app_detail", slug="privchat"), code=308)
 
 
 @app.route(f"{DEFAULT_PREFIX}/ajuda-instalacao.html")
 def legacy_install_help() -> Any:
-    selected = get_app("privchat")
-    if selected is None:
-        return render_template("404.html"), 404
-    return render_template(
-        "ajuda-instalacao.html", app=selected, asset_base="./", detail_url="./privchat.html"
-    )
+    return redirect(url_for("app_install_help", slug="privchat"), code=308)
 
 
 @app.route(f"{DEFAULT_PREFIX}/download/<slug>/")
@@ -632,7 +615,14 @@ def admin_review_delete(review_id: int) -> Any:
 @app.route(f"{DEFAULT_PREFIX}/<path:filename>")
 def store_file(filename: str) -> Any:
     path = Path(filename)
-    blocked_names = {"admin.html", "server.py", "store.db", "requirements.txt", "CONTEXTO-PROJETO.md"}
+    blocked_names = {
+        "admin.html",
+        "category.html",
+        "server.py",
+        "store.db",
+        "requirements.txt",
+        "CONTEXTO-PROJETO.md",
+    }
     blocked_prefixes = ("data/", "tests/", ".git/", ".codex/", ".agents/", "__pycache__/")
     allowed_extensions = {".html", ".js", ".svg", ".png", ".jpg", ".jpeg", ".webp", ".apk", ".ico"}
     if path.name in blocked_names or filename.startswith(blocked_prefixes) or path.suffix.lower() not in allowed_extensions:
@@ -652,7 +642,7 @@ def store_file(filename: str) -> Any:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Serve a loja pessoal em /store/.")
+    parser = argparse.ArgumentParser(description="Serve páginas individuais de aplicativos em /store/.")
     parser.add_argument("--host", default="127.0.0.1")
     parser.add_argument("--port", default=8181, type=int)
     parser.add_argument("--debug", action="store_true")
@@ -664,7 +654,7 @@ init_database()
 
 if __name__ == "__main__":
     args = parse_args()
-    print(f"Loja disponível em http://{args.host}:{args.port}{DEFAULT_PREFIX}/")
+    print(f"Gerenciador disponível em http://{args.host}:{args.port}{DEFAULT_PREFIX}/")
     print(f"Painel em http://{args.host}:{args.port}{DEFAULT_PREFIX}/admin/")
     if not admin_configured():
         print("AVISO: painel bloqueado até STORE_ADMIN_PASSWORD ou STORE_ADMIN_PASSWORD_HASH ser configurado.")

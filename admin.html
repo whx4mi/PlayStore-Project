@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Painel da loja</title>
+  <title>Gerenciador de páginas de aplicativos</title>
   <style>
     :root{--green:#087f5b;--green-dark:#056449;--ink:#202124;--muted:#5f6368;--line:#dfe3e1;--soft:#f5f8f6;--danger:#b3261e;--success:#137333}
     *{box-sizing:border-box}body{margin:0;background:#f7f9f8;color:var(--ink);font:15px/1.45 Arial,sans-serif}a{color:var(--green);text-decoration:none}button,input,textarea{font:inherit}
@@ -13,36 +13,36 @@
     .toolbar{display:flex;align-items:center;gap:14px;margin-bottom:22px}.toolbar div:first-child{flex:1}.button,button{display:inline-flex;align-items:center;justify-content:center;min-height:40px;border:0;border-radius:20px;padding:0 18px;background:var(--green);color:#fff;font-weight:700;cursor:pointer}.button:hover,button:hover{background:var(--green-dark)}.secondary{background:#fff;color:var(--green);border:1px solid #aacfc1}.danger{background:#fff;color:var(--danger);border:1px solid #efc1bd}.small{min-height:34px;padding:0 13px;font-size:13px}
     label{display:grid;gap:7px;font-weight:700;color:#3c4043}input,textarea{width:100%;border:1px solid #cbd3cf;border-radius:10px;padding:10px 12px;background:#fff;color:var(--ink)}textarea{min-height:105px;resize:vertical}input:focus,textarea:focus{outline:3px solid #c8eadc;border-color:var(--green)}input[type=file]{padding:8px}.check{display:flex;align-items:center;gap:9px}.check input{width:auto}
     .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}.wide{grid-column:1/-1}.distribution{border:1px solid var(--line);border-radius:13px;padding:16px;margin:0}.distribution legend{padding:0 7px;font-weight:700}.distribution-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.distribution-note{color:var(--muted);font-size:12px;margin:10px 0 0}.form-actions{display:flex;gap:10px;margin-top:22px;flex-wrap:wrap}.section{margin-top:24px}.file-current{font-size:12px;color:var(--muted);font-weight:400;word-break:break-all}
-    .apps{display:grid;gap:11px}.app-row{display:grid;grid-template-columns:58px minmax(0,1fr) auto;gap:14px;align-items:center;padding:13px;border:1px solid var(--line);border-radius:14px}.app-row img{width:58px;height:58px;border-radius:13px;object-fit:cover;background:#edf1ef}.app-row strong{display:block}.meta{color:var(--muted);font-size:13px;margin-top:3px}.status{display:inline-block;border-radius:12px;padding:3px 9px;font-size:12px;font-weight:700;background:#e6f4ea;color:var(--success)}.status.draft{background:#f1f3f4;color:#5f6368}
+    .apps{display:grid;gap:11px}.app-row{display:grid;grid-template-columns:58px minmax(0,1fr) auto;gap:14px;align-items:center;padding:15px;border:1px solid var(--line);border-radius:14px}.app-row img{width:58px;height:58px;border-radius:13px;object-fit:cover;background:#edf1ef}.app-row strong{display:inline-block;margin-right:8px}.meta{color:var(--muted);font-size:13px;margin-top:3px}.url-box{display:flex;align-items:center;gap:8px;margin-top:9px}.url-box code{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#3c4043;background:var(--soft);border-radius:7px;padding:5px 8px}.row-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px}.status{display:inline-block;border-radius:12px;padding:3px 9px;font-size:12px;font-weight:700;background:#e6f4ea;color:var(--success)}.status.draft{background:#f1f3f4;color:#5f6368}
     .flash{border-radius:10px;padding:11px 14px;margin-bottom:16px;background:#e6f4ea;color:var(--success)}.flash.error{background:#fce8e6;color:var(--danger)}.warning{background:#fff4ce;color:#6e4c00;border-radius:10px;padding:12px 14px;margin:15px 0}
     .review{border:1px solid var(--line);border-radius:12px;padding:14px;margin-top:10px}.review-top{display:flex;gap:10px;align-items:center}.review-top strong{flex:1}.review p{margin:8px 0 0;color:#3c4043}.review form{margin:0}.review-grid{display:grid;grid-template-columns:1fr 110px 190px 110px;gap:12px}.review-grid textarea{grid-column:1/-1}
-    @media(max-width:760px){.grid,.review-grid{grid-template-columns:1fr}.wide,.review-grid textarea{grid-column:auto}.distribution-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.toolbar{align-items:flex-start;flex-direction:column}.app-row{grid-template-columns:48px minmax(0,1fr)}.app-row img{width:48px;height:48px}.app-row>.button{grid-column:1/-1}.topbar{padding:0 16px}.container{padding:22px 14px 45px}.panel{padding:18px}}
+    @media(max-width:760px){.grid,.review-grid{grid-template-columns:1fr}.wide,.review-grid textarea{grid-column:auto}.distribution-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.toolbar{align-items:flex-start;flex-direction:column}.app-row{grid-template-columns:48px minmax(0,1fr)}.app-row img{width:48px;height:48px}.row-actions{grid-column:1/-1;justify-content:flex-start}.url-box{align-items:stretch;flex-direction:column}.url-box code{white-space:normal;word-break:break-all}.topbar{padding:0 16px}.container{padding:22px 14px 45px}.panel{padding:18px}}
   </style>
 </head>
 <body>
 {% if mode == 'login' %}
   <main class="login-wrap"><section class="panel login">
-    <h1>Painel da loja</h1><p class="muted">Gerencie os aplicativos publicados em <code>/store/</code>.</p>
+    <h1>Gerenciador de aplicativos</h1><p class="muted">Crie e edite páginas individuais de download publicadas em <code>/store/apps/</code>.</p>
     {% for category, message in get_flashed_messages(with_categories=true) %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}
     {% if not configured %}<div class="warning">O painel está bloqueado. Configure <code>STORE_ADMIN_PASSWORD</code> e <code>STORE_SECRET_KEY</code> no serviço da VPS.</div>{% endif %}
     <form method="post" action="{{ url_for('admin_login') }}">
       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
       <label>Senha<input type="password" name="password" required autocomplete="current-password" autofocus></label>
-      <div class="form-actions"><button type="submit">Entrar</button><a class="button secondary" href="{{ url_for('store_home') }}">Voltar à loja</a></div>
+      <div class="form-actions"><button type="submit">Entrar</button></div>
     </form>
   </section></main>
 {% else %}
-  <header class="topbar"><span class="brand">Painel da loja</span><a href="{{ url_for('store_home') }}" target="_blank" rel="noopener">Abrir loja</a><span class="spacer"></span><form method="post" action="{{ url_for('admin_logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="secondary small" type="submit">Sair</button></form></header>
+  <header class="topbar"><span class="brand">Páginas de aplicativos</span><span class="spacer"></span><form method="post" action="{{ url_for('admin_logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><button class="secondary small" type="submit">Sair</button></form></header>
   <main class="container">
     {% for category, message in get_flashed_messages(with_categories=true) %}<div class="flash {{ category }}">{{ message }}</div>{% endfor %}
     {% if mode == 'list' %}
-      <div class="toolbar"><div><h1>Aplicativos</h1><span class="muted">Apps publicados aparecem antes dos conteúdos fictícios.</span></div><a class="button" href="{{ url_for('admin_app_new') }}">Novo aplicativo</a></div>
+      <div class="toolbar"><div><h1>Aplicativos</h1><span class="muted">Cada item publicado possui uma página de download e um guia de instalação próprios.</span></div><a class="button" href="{{ url_for('admin_app_new') }}">Novo aplicativo</a></div>
       <section class="panel apps">
         {% for app in apps %}
           <article class="app-row">
             <img src="{{ url_for('store_file', filename=app.icon_path) }}" alt="">
-            <div><strong>{{ app.name }}</strong><span class="status{% if not app.published %} draft{% endif %}">{{ 'Publicado' if app.published else 'Rascunho' }}</span><div class="meta">/{{ app.slug }} · Prioridade {{ app.priority }} · {{ app.download_count }} downloads reais</div></div>
-            <a class="button secondary small" href="{{ url_for('admin_app_edit', app_id=app.id) }}">Editar</a>
+            <div><strong>{{ app.name }}</strong><span class="status{% if not app.published %} draft{% endif %}">{{ 'Publicado' if app.published else 'Rascunho' }}</span><div class="meta">{{ app.download_count }} downloads registrados</div>{% if app.published %}<div class="url-box"><code>{{ url_for('app_detail', slug=app.slug, _external=True) }}</code><button class="secondary small copy-url" type="button" data-copy="{{ url_for('app_detail', slug=app.slug, _external=True) }}">Copiar URL</button></div>{% else %}<div class="meta">Publique o aplicativo para liberar a URL pública.</div>{% endif %}</div>
+            <div class="row-actions">{% if app.published %}<a class="button secondary small" target="_blank" rel="noopener" href="{{ url_for('app_detail', slug=app.slug) }}">Abrir página</a><a class="button secondary small" target="_blank" rel="noopener" href="{{ url_for('app_install_help', slug=app.slug) }}">Abrir guia</a>{% endif %}<a class="button secondary small" href="{{ url_for('admin_app_edit', app_id=app.id) }}">Editar</a></div>
           </article>
         {% else %}<p class="muted">Nenhum aplicativo cadastrado.</p>{% endfor %}
       </section>
@@ -75,15 +75,13 @@
           <label>Android mínimo<input name="minimum_android" value="{{ item.minimum_android if item else '8.0' }}"></label>
           <label>Data exibida de atualização<input name="updated_at_label" value="{{ item.updated_at_label if item else '' }}" placeholder="17 de setembro de 2026"></label>
           <label>Nome do APK baixado<input name="download_filename" value="{{ item.download_filename if item else '' }}" placeholder="MeuAplicativo.apk"></label>
-          <label>Prioridade na home<input type="number" min="0" name="priority" value="{{ item.priority if item else 100 }}"><span class="file-current">Quanto menor o número, mais cedo aparece.</span></label>
           <label class="wide">Informações de segurança, separadas por |<textarea name="safety_text">{{ item.safety_text if item else 'Verifique as permissões solicitadas antes de instalar.' }}</textarea></label>
           <label>Ícone<input type="file" name="icon" accept=".png,.jpg,.jpeg,.webp"><span class="file-current">Atual: {{ item.icon_path if item else 'fallback padrão' }}</span></label>
           <label>Banner opcional<input type="file" name="banner" accept=".png,.jpg,.jpeg,.webp"><span class="file-current">Atual: {{ item.banner_path if item and item.banner_path else 'nenhum' }}</span></label>
           <label class="wide">Arquivo APK<input type="file" name="apk" accept=".apk"><span class="file-current">Atual: {{ item.apk_path if item and item.apk_path else 'nenhum' }}</span></label>
-          <label class="check"><input type="checkbox" name="published" value="1" {% if item and item.published %}checked{% endif %}> Publicado</label>
-          <label class="check"><input type="checkbox" name="featured" value="1" {% if item and item.featured %}checked{% endif %}> Destaque na home</label>
+          <label class="check"><input type="checkbox" name="published" value="1" {% if not item or item.published %}checked{% endif %}> Publicado</label>
         </div>
-        <div class="form-actions"><button type="submit">Salvar aplicativo</button>{% if item and item.published %}<a class="button secondary" target="_blank" rel="noopener" href="{{ url_for('app_detail', slug=item.slug) }}">Visualizar página</a>{% endif %}</div>
+        <div class="form-actions"><button type="submit">Salvar aplicativo</button>{% if item and item.published %}<a class="button secondary" target="_blank" rel="noopener" href="{{ url_for('app_detail', slug=item.slug) }}">Visualizar página</a><a class="button secondary" target="_blank" rel="noopener" href="{{ url_for('app_install_help', slug=item.slug) }}">Visualizar guia</a>{% endif %}</div>
       </form>
       {% if item %}
         <section class="panel section">
@@ -99,5 +97,13 @@
     {% endif %}
   </main>
 {% endif %}
+<script>
+  document.querySelectorAll('.copy-url').forEach(button=>button.addEventListener('click',async()=>{
+    const original=button.textContent;
+    try{await navigator.clipboard.writeText(button.dataset.copy);button.textContent='Copiado!'}
+    catch(error){window.prompt('Copie a URL da página:',button.dataset.copy)}
+    window.setTimeout(()=>{button.textContent=original},1800);
+  }));
+</script>
 </body>
 </html>

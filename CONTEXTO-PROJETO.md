@@ -1,12 +1,12 @@
-# Contexto do projeto — Google Play local / PrivChat
+# Contexto do projeto — páginas pessoais de aplicativos
 
 Use este arquivo como contexto ao iniciar um novo chat. O projeto está funcionando; preserve o comportamento descrito abaixo e faça alterações incrementais.
 
-## Objetivo
+## Objetivo atual
 
-Clone visual da área brasileira da Google Play para portfólio, executado localmente e publicado sob a subrota `/store/` de um domínio que já possui outra plataforma na rota principal.
+Gerenciador privado de páginas individuais de aplicativos, publicado integralmente sob `/store/`. O painel grava os dados no SQLite e reutiliza uma template para a página de download e outra para o guia de instalação.
 
-O clone não deve ocupar `/`, alterar o serviço principal do domínio ou depender de caminhos absolutos. Todos os links e recursos internos devem continuar funcionando quando acessados por `/store/`.
+Não existe mais uma vitrine pública com aplicativos fictícios. `/store/` leva ao painel administrativo, enquanto cada app publicado é acessado somente pela URL direta `/store/apps/<slug>/`.
 
 Este é um projeto demonstrativo. Não apresentar a simulação visual como uma análise real do Google Play Protect nem orientar usuários a desativar proteções do Android.
 
@@ -14,178 +14,117 @@ Este é um projeto demonstrativo. Não apresentar a simulação visual como uma 
 
 - Projeto local: `F:\ProjetosCodeX\google-play-local`
 - Repositório privado: `https://github.com/whx4mi/PlayStore-Project`
-- Projeto na VPS: `/root/PlayStore`
-- Servidor Python: `127.0.0.1:8181`
-- URL local: `http://127.0.0.1:8181/store/`
-- URL pública: `https://updates-playstore.store/store/`
-- Página do aplicativo: `/store/privchat.html`
-- Página de ajuda: `/store/ajuda-instalacao.html`
+- Branch atual: `teste/painel-admin-mvp`
+- Projeto principal na VPS: `/root/PlayStore`
+- Checkout de teste usado na VPS: `/root/PlayStore-test`
+- Servidor principal planejado: `127.0.0.1:8181`
+- Servidor usado no checkout de teste: `127.0.0.1:8182`
+- Domínio público: `https://updates-playstore.store`
+- Entrada do gerenciador: `/store/`
+- Painel: `/store/admin/`
+- Página pública: `/store/apps/<slug>/`
+- Guia de instalação: `/store/apps/<slug>/ajuda/`
+
+O projeto não deve ocupar `/`, alterar o serviço principal do domínio ou depender de caminhos absolutos fora da subrota `/store/`.
 
 ## Arquivos principais
 
-- `index.html`: página inicial da loja.
-- `category.html`: conteúdo das abas Jogos, Apps, Filmes e TV, Livros e Crianças.
-- `privchat.html`: página completa do PrivChat e fluxo de instalação.
-- `ajuda-instalacao.html`: resolução de problemas de download e instalação.
-- `privchat-v2.png`: ícone atual do PrivChat. O nome versionado resolveu cache antigo do navegador/Cloudflare.
-- `app.apk`: arquivo baixado pelo botão **Instalar**, apresentado ao navegador como `PrivChat.apk`.
-- `store-runtime.js`: tratamento comum de falhas de recursos e arquivos.
+- `server.py`: Flask, SQLite, autenticação, uploads e rotas.
+- `admin.html`: login, lista de páginas, formulário e comentários.
+- `privchat.html`: template pública utilizada por todos os aplicativos.
+- `ajuda-instalacao.html`: template personalizada do guia de instalação.
+- `store-runtime.js`: tratamento comum de recursos e arquivos.
 - `fallback-app.svg`: imagem de fallback.
-- `404.html`: página de erro.
-- `server.py`: servidor HTTP Python exclusivo para `/store/`.
-- `nginx-store.conf`: bloco Nginx que deve ficar dentro do `server { ... }` HTTPS já existente.
-- `SERVIDOR.md`: instruções rápidas do servidor.
+- `SERVIDOR.md`: instalação e operação.
+- `tests/smoke_test.py`: teste das rotas e do fluxo administrativo.
+- `tests/concurrent_boot_test.py`: teste da migração SQLite com workers concorrentes.
 
-Também existe `51OLG+0NfPL.png`, nome antigo do ícone; as páginas atuais devem usar `privchat-v2.png`.
+`index.html` e `category.html` são arquivos legados e não participam mais do fluxo público. A categoria está bloqueada pelo servidor. As rotas antigas `/store/privchat.html` e `/store/ajuda-instalacao.html` apenas redirecionam para as URLs canônicas do PrivChat.
 
-## Estado funcional atual
+O arquivo `store-transparency.js` foi removido. Não existe aviso bloqueando a entrada na página.
 
-- A página inicial e as categorias simulam o visual da Google Play.
-- Clicar no PrivChat abre `privchat.html`.
-- O aplicativo mostra avaliação `4,7`, mais de `200 mil` downloads e comentários demonstrativos.
-- O botão **Instalar** abre um modal de verificação visual com barra de progresso de aproximadamente cinco segundos.
-- O modal informa explicitamente que é uma simulação e não uma análise real do Google Play Protect.
-- Antes de iniciar o fluxo, o código confirma que `app.apk` está disponível.
-- Depois da simulação, o navegador inicia o download do APK.
-- Após o download ser iniciado, o modal permanece aberto e mostra:
-  - **Problemas para instalar?**
-  - link **Clique aqui para resolver · Resolução de problemas**.
-- O link abre `./ajuda-instalacao.html`, preservando automaticamente o prefixo `/store/`.
-- A página de ajuda cobre download interrompido, arquivo incompleto, armazenamento, compatibilidade, bloqueios do Android e conflito com versão existente.
-- A página de ajuda não recomenda desativar o Play Protect ou ignorar alertas graves.
-- Lista de desejos usa `localStorage` e possui tratamento caso o armazenamento não esteja disponível.
+## Comportamento funcional
 
-## Servidor local
+- `/store/` redireciona para o painel.
+- O painel exige `STORE_ADMIN_PASSWORD` ou `STORE_ADMIN_PASSWORD_HASH`.
+- Cada app pode ser rascunho ou publicado.
+- Novos apps aparecem como publicados por padrão no formulário, mas podem ser salvos como rascunho.
+- O dashboard mostra a URL direta, botão para copiar e atalhos para página e guia.
+- Nome, slug, desenvolvedor, textos, ícone, banner, APK, versão, Android mínimo, downloads exibidos, avaliação geral, distribuição de estrelas e comentários são personalizáveis.
+- O upload aceita ícones e banners PNG, JPG, JPEG ou WebP e valida o conteúdo do arquivo. O APK precisa ter extensão `.apk` e estrutura ZIP válida.
+- Uploads são armazenados em `media/<slug>/` com nomes aleatórios; o caminho fica registrado no SQLite.
+- O botão **Instalar** abre o modal com o texto **Verificando aplicativo com Google Play Protect** e uma barra visual de aproximadamente cinco segundos.
+- A informação de que a verificação é uma simulação aparece dentro do modal de download, sem bloquear a entrada na página.
+- A página de ajuda usa um texto-base fixo e altera apenas as informações essenciais do aplicativo.
+- O download real é contabilizado e servido com o nome configurado no painel.
+- O `ProxyFix` utiliza os cabeçalhos do Nginx para o painel copiar URLs públicas com `https://`.
+- A inicialização SQLite tolera workers concorrentes configurando o modo WAL e serializa as migrações aditivas.
 
-Executar na raiz do projeto:
+## Servidor e dados
+
+O SQLite é criado em `data/store.db`; uploads ficam em `media/`. Ambos devem ser preservados em atualizações e incluídos no backup da VPS.
+
+Execução local:
 
 ```powershell
-cd F:\ProjetosCodeX\google-play-local
+$env:STORE_SECRET_KEY = "segredo-local"
+$env:STORE_ADMIN_PASSWORD = "senha-local"
 python server.py
 ```
 
-Configuração padrão do `server.py`:
-
-- host: `127.0.0.1`
-- porta: `8181`
-- prefixo obrigatório: `/store`
-
-Alternativa explícita:
-
-```powershell
-python server.py --host 127.0.0.1 --port 8181
-```
-
-O servidor trata `/store`, `/store/`, arquivos inexistentes, tipos MIME, cache de HTML e download do APK. Não substituir por `python -m http.server`, pois isso perde o comportamento específico da subrota.
-
-## Nginx
-
-O domínio possui um serviço principal em outra porta, normalmente atrás de `location /`. O bloco da loja deve ser irmão de `location /`, nunca ficar aninhado dentro dele:
-
-```nginx
-location = /store {
-    return 308 /store/;
-}
-
-location /store/ {
-    proxy_pass http://127.0.0.1:8181/store/;
-    proxy_http_version 1.1;
-
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
-    proxy_set_header X-Forwarded-Prefix /store;
-
-    proxy_connect_timeout 5s;
-    proxy_read_timeout 60s;
-}
-```
-
-Depois de editar:
-
-```bash
-sudo nginx -t
-sudo systemctl reload nginx
-```
-
-Já ocorreu conflito porque havia dois arquivos habilitados com o mesmo `server_name`: `gemini_c2` e `gemini_backupconf`, sendo que o backup apontava para a mesma configuração. Manter apenas uma configuração habilitada para `updates-playstore.store`.
-
-## Atualização pelo GitHub
-
-O usuário prefere executar os commits e pushes; não commitar automaticamente.
-
-No Windows:
-
-```powershell
-cd F:\ProjetosCodeX\google-play-local
-git status
-git add <arquivos-alterados>
-git commit -m "Descrição da alteração"
-git push
-```
-
-Na VPS:
+Produção:
 
 ```bash
 cd /root/PlayStore
-git pull --ff-only origin main
+. .venv/bin/activate
+gunicorn --workers 2 --bind 127.0.0.1:8181 --access-logfile - server:app
 ```
 
-Arquivos estáticos novos normalmente aparecem sem reiniciar o servidor. Reiniciar somente se o processo/serviço não estiver respondendo ou se a forma de execução exigir isso.
-
-## Diagnóstico na VPS
-
-Verificar processo e porta:
+No checkout de teste já foi usado:
 
 ```bash
-ps aux | grep '[s]erver.py'
-sudo ss -ltnp | grep ':8181'
-curl -I http://127.0.0.1:8181/store/
-curl -I http://127.0.0.1:8181/store/privchat-v2.png
-curl -I http://127.0.0.1:8181/store/ajuda-instalacao.html
+cd /root/PlayStore-test
+. .venv/bin/activate
+gunicorn --workers 2 --bind 127.0.0.1:8182 --access-logfile - server:app
 ```
 
-Verificar Nginx e acesso público:
+As variáveis `STORE_SECRET_KEY`, `STORE_ADMIN_PASSWORD_HASH` e `STORE_COOKIE_SECURE=1` devem estar disponíveis para o processo do Gunicorn. Consulte `SERVIDOR.md`.
 
-```bash
-sudo nginx -t
-curl -kI https://updates-playstore.store/store/
-curl -kI https://updates-playstore.store/store/privchat-v2.png
-```
+## Validação atual
 
-Se aparecer `Address already in use`, localizar o processo que já ocupa `8181` antes de iniciar outro. O serviço principal e a loja precisam usar portas locais diferentes.
+Depois da reformulação foram executados com sucesso:
 
-## Cache e imagens
+- `tests/smoke_test.py`: `smoke-test-ok`.
+- `tests/concurrent_boot_test.py`: `concurrent-boot-test-ok` com quatro inicializações simultâneas.
+- Criação de app, campos personalizados, distribuição das estrelas, página pública, guia, download, login, URLs HTTPS atrás do proxy e bloqueio dos arquivos internos.
 
-Cloudflare e o navegador já mantiveram uma versão antiga do ícone mesmo quando `curl` retornava HTTP 200. Renomear o recurso para `privchat-v2.png` e atualizar as referências resolveu o problema.
-
-Ao alterar HTML ou imagens e a versão pública não mudar:
-
-1. Confirmar o conteúdo diretamente com `curl`.
-2. Fazer recarga forçada no navegador.
-3. Limpar somente as URLs afetadas no cache do Cloudflare.
-4. Para recursos visuais muito cacheados, preferir um novo nome versionado (`arquivo-v3.png`) ou query string de versão.
+O envio multipart de novos arquivos não foi exercitado no último smoke test, mas o código de upload e suas validações permanecem intactos.
 
 ## Regras para próximas alterações
 
-- Trabalhar a partir de `F:\ProjetosCodeX\google-play-local`.
 - Preservar a publicação integral sob `/store/`.
-- Usar links relativos como `./privchat.html`, `./app.apk` e `./privchat-v2.png`.
-- Não usar caminhos iniciados por `/` para recursos internos.
-- Não alterar nem interromper a plataforma principal do domínio.
-- Manter acessibilidade básica: foco visível, textos alternativos, teclado e estados do modal.
-- Manter tratamento de falhas para APK, imagens e navegação.
-- Validar JavaScript e testar pelo menos as rotas alteradas com HTTP 200.
-- Não incluir senhas, tokens, chaves privadas ou certificados no repositório.
-- O usuário fará o commit e o push quando a alteração estiver pronta.
+- Não reintroduzir uma vitrine pública; compartilhar apenas URLs diretas dos apps.
+- Manter uma única template pública e uma única template de ajuda alimentadas pelo SQLite.
+- Manter o texto-base do guia, alterando somente informações do aplicativo.
+- Não usar um aviso inicial bloqueando a entrada; manter a transparência dentro do fluxo de download.
+- Não orientar a desativação do Play Protect ou a ignorar alertas do Android.
+- Preservar acessibilidade de teclado, foco e estados dos modais.
+- Validar JavaScript e as rotas alteradas.
+- Não versionar banco, uploads, senhas, tokens, chaves ou certificados.
+- O usuário faz os commits e pushes; não commitar automaticamente.
 
-## Última alteração concluída
+## Estado atual
 
-Foi adicionada a página `ajuda-instalacao.html`. O modal de instalação agora permanece aberto após iniciar o download e oferece o link de resolução de problemas. As seguintes rotas foram validadas localmente com HTTP 200:
+A vitrine pública foi retirada do fluxo. O dashboard administrativo é o centro do projeto e apresenta a URL direta de cada aplicativo publicado, além dos atalhos para a página e para o guia personalizado.
 
-- `/store/privchat.html`
-- `/store/ajuda-instalacao.html`
-- `/store/app.apk`
+Há alterações locais ainda sem commit nos seguintes arquivos:
 
-Até este ponto, o usuário confirmou que o projeto está funcionando corretamente.
+- `CONTEXTO-PROJETO.md`
+- `SERVIDOR.md`
+- `admin.html`
+- `ajuda-instalacao.html`
+- `privchat.html`
+- `server.py`
+- `tests/smoke_test.py`
+
+Não descartar essas alterações. Antes de continuar em outro chat, executar `git status` e revisar o diff. O usuário prefere fazer o commit e o push manualmente.

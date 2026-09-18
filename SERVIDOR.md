@@ -2,12 +2,12 @@
 
 O gerenciador e as páginas são servidos exclusivamente sob `/store/`:
 
-- Entrada do gerenciador: `https://seu-dominio/store/`
+- Vitrine pública: `https://seu-dominio/store/`
 - Painel: `https://seu-dominio/store/admin/`
 - Aplicativo: `https://seu-dominio/store/apps/<identificador>/`
 - Guia: `https://seu-dominio/store/apps/<identificador>/ajuda/`
 
-Não existe mais uma vitrine pública com vários aplicativos. A rota `/store/` leva ao painel, e cada aplicativo publicado é compartilhado pela sua URL direta exibida no gerenciador.
+A vitrine mantém os aplicativos fictícios da demonstração e exibe primeiro os aplicativos reais publicados pelo painel. Cada aplicativo real também pode ser compartilhado pela URL direta exibida no gerenciador.
 
 O painel não possui senha padrão. Se nenhuma credencial for configurada, a tela de login permanece bloqueada.
 

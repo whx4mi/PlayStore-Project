@@ -4,9 +4,9 @@ Use este arquivo como contexto ao iniciar um novo chat. O projeto está funciona
 
 ## Objetivo atual
 
-Gerenciador privado de páginas individuais de aplicativos, publicado integralmente sob `/store/`. O painel grava os dados no SQLite e reutiliza uma template para a página de download e outra para o guia de instalação.
+Vitrine demonstrativa e gerenciador privado de páginas individuais de aplicativos, publicados integralmente sob `/store/`. O painel grava os dados no SQLite e reutiliza uma template para a página de download e outra para o guia de instalação.
 
-Não existe mais uma vitrine pública com aplicativos fictícios. `/store/` leva ao painel administrativo, enquanto cada app publicado é acessado somente pela URL direta `/store/apps/<slug>/`.
+A vitrine pública em `/store/` preserva os aplicativos fictícios do layout e mostra primeiro os aplicativos reais publicados pelo painel. Cada app publicado também é acessado pela URL direta `/store/apps/<slug>/`.
 
 Este é um projeto demonstrativo. Não apresentar a simulação visual como uma análise real do Google Play Protect nem orientar usuários a desativar proteções do Android.
 
@@ -20,7 +20,7 @@ Este é um projeto demonstrativo. Não apresentar a simulação visual como uma 
 - Servidor principal planejado: `127.0.0.1:8181`
 - Servidor usado no checkout de teste: `127.0.0.1:8182`
 - Domínio público: `https://updates-playstore.store`
-- Entrada do gerenciador: `/store/`
+- Vitrine pública: `/store/`
 - Painel: `/store/admin/`
 - Página pública: `/store/apps/<slug>/`
 - Guia de instalação: `/store/apps/<slug>/ajuda/`
@@ -39,13 +39,13 @@ O projeto não deve ocupar `/`, alterar o serviço principal do domínio ou depe
 - `tests/smoke_test.py`: teste das rotas e do fluxo administrativo.
 - `tests/concurrent_boot_test.py`: teste da migração SQLite com workers concorrentes.
 
-`index.html` e `category.html` são arquivos legados e não participam mais do fluxo público. A categoria está bloqueada pelo servidor. As rotas antigas `/store/privchat.html` e `/store/ajuda-instalacao.html` apenas redirecionam para as URLs canônicas do PrivChat.
+`index.html` é a vitrine pública: mantém o visual demonstrativo e recebe os aplicativos reais publicados antes dos itens fictícios. `category.html` continua legado e bloqueado pelo servidor. As rotas antigas `/store/privchat.html` e `/store/ajuda-instalacao.html` apenas redirecionam para as URLs canônicas do PrivChat.
 
 O arquivo `store-transparency.js` foi removido. Não existe aviso bloqueando a entrada na página.
 
 ## Comportamento funcional
 
-- `/store/` redireciona para o painel.
+- `/store/` renderiza a vitrine, com aplicativos reais publicados antes dos itens fictícios.
 - O painel exige `STORE_ADMIN_PASSWORD` ou `STORE_ADMIN_PASSWORD_HASH`.
 - Cada app pode ser rascunho ou publicado.
 - Novos apps aparecem como publicados por padrão no formulário, mas podem ser salvos como rascunho.
@@ -103,7 +103,7 @@ O envio multipart de novos arquivos não foi exercitado no último smoke test, m
 ## Regras para próximas alterações
 
 - Preservar a publicação integral sob `/store/`.
-- Não reintroduzir uma vitrine pública; compartilhar apenas URLs diretas dos apps.
+- Preservar o visual da vitrine e manter os aplicativos reais publicados antes dos itens fictícios.
 - Manter uma única template pública e uma única template de ajuda alimentadas pelo SQLite.
 - Manter o texto-base do guia, alterando somente informações do aplicativo.
 - Não usar um aviso inicial bloqueando a entrada; manter a transparência dentro do fluxo de download.
@@ -115,15 +115,12 @@ O envio multipart de novos arquivos não foi exercitado no último smoke test, m
 
 ## Estado atual
 
-A vitrine pública foi retirada do fluxo. O dashboard administrativo é o centro do projeto e apresenta a URL direta de cada aplicativo publicado, além dos atalhos para a página e para o guia personalizado.
+A vitrine pública preserva o layout demonstrativo e apresenta primeiro os aplicativos reais publicados. O dashboard administrativo apresenta a URL direta de cada aplicativo publicado, além dos atalhos para a página e para o guia personalizado.
 
 Há alterações locais ainda sem commit nos seguintes arquivos:
 
 - `CONTEXTO-PROJETO.md`
 - `SERVIDOR.md`
-- `admin.html`
-- `ajuda-instalacao.html`
-- `privchat.html`
 - `server.py`
 - `tests/smoke_test.py`
 

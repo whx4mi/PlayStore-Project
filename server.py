@@ -247,6 +247,18 @@ def get_app(slug: str, include_drafts: bool = False) -> dict[str, Any] | None:
         return row_to_app(row, reviews)
 
 
+def public_apps() -> list[dict[str, Any]]:
+    with database() as connection:
+        rows = connection.execute(
+            """
+            SELECT * FROM apps
+            WHERE published = 1 AND real_app = 1
+            ORDER BY featured DESC, priority ASC, created_at DESC
+            """
+        ).fetchall()
+        return [row_to_app(row) for row in rows]
+
+
 def admin_configured() -> bool:
     return bool(os.environ.get("STORE_ADMIN_PASSWORD_HASH") or os.environ.get("STORE_ADMIN_PASSWORD"))
 
@@ -417,8 +429,9 @@ def store_redirect() -> Any:
 @app.route(f"{DEFAULT_PREFIX}/")
 @app.route(f"{DEFAULT_PREFIX}/index.html")
 def store_home() -> Any:
-    """A antiga vitrine foi substituída pelo gerenciador de páginas."""
-    return redirect(url_for("admin_dashboard"))
+    real_apps = public_apps()
+    featured_app = next((item for item in real_apps if item["featured"]), real_apps[0] if real_apps else None)
+    return render_template("index.html", real_apps=real_apps, featured_app=featured_app)
 
 
 @app.route(f"{DEFAULT_PREFIX}/apps/<slug>/")

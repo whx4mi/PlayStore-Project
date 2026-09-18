@@ -99,9 +99,12 @@ fixed_help_phrases = [
 ]
 assert all(phrase in help_text for phrase in fixed_help_phrases)
 home = client.get("/store/")
-assert home.status_code == 302
-assert home.headers["Location"].endswith("/store/admin/")
-assert client.get("/store/index.html").status_code == 302
+assert home.status_code == 200
+assert home.data.index(b"Aplicativo de Teste") < home.data.index(b"Balatro")
+assert b'href="./apps/aplicativo-teste/"' not in home.data
+assert b'data-target="./apps/aplicativo-teste/"' in home.data
+assert b"{%" not in home.data and b"{{" not in home.data
+assert client.get("/store/index.html").status_code == 200
 assert client.get("/store/category.html?tab=apps").status_code == 404
 legacy_detail = client.get("/store/privchat.html")
 assert legacy_detail.status_code == 308

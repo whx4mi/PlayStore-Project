@@ -53,7 +53,7 @@
     <div class="content-grid">
       <div class="content">
         <section><h2>Sobre este app</h2><p class="about">{{ app.description }}</p><div class="tags">{% for tag in app.tags_list %}<span class="tag">{{ tag }}</span>{% endfor %}</div></section>
-        <section><h2>Avaliações e comentários</h2><div class="rating-summary"><div><div class="score">{{ app.rating_display }}</div><div class="stars">★★★★★</div><div class="review-count">{{ app.rating_count_label }}</div></div><div class="bars"><div class="bar"><span>5</span><div class="track"><div class="fill" style="width:83%"></div></div></div><div class="bar"><span>4</span><div class="track"><div class="fill" style="width:11%"></div></div></div><div class="bar"><span>3</span><div class="track"><div class="fill" style="width:4%"></div></div></div><div class="bar"><span>2</span><div class="track"><div class="fill" style="width:1.5%"></div></div></div><div class="bar"><span>1</span><div class="track"><div class="fill" style="width:.5%"></div></div></div></div></div>
+        <section><h2>Avaliações e comentários</h2><div class="rating-summary"><div><div class="score">{{ app.rating_display }}</div><div class="stars">★★★★★</div><div class="review-count">{{ app.rating_count_label }}</div></div><div class="bars">{% for stars, percent in app.rating_distribution %}<div class="bar"><span>{{ stars }}</span><div class="track" title="{{ percent }}% das avaliações"><div class="fill" style="width:{{ percent }}%"></div></div></div>{% endfor %}</div></div>
           {% for review in app.reviews %}<article class="review"><div class="review-head"><span class="review-avatar">{{ review.author_name[:1]|upper }}</span><div><div class="review-name">{{ review.author_name }}</div><div class="review-meta"><span class="stars">{{ '★' * review.rating }}</span><span>{{ review.review_date }}</span></div></div></div><p>{{ review.body }}</p></article>{% endfor %}
         </section>
       </div>
@@ -69,7 +69,7 @@
       <div class="protect-track" id="protectTrack" role="progressbar" aria-label="Progresso da verificação" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="protect-progress" id="protectProgress"></div></div>
       <div class="protect-meta"><span id="protectPercent">0%</span><span>{{ app.download_filename }}</span></div>
       <p class="protect-note" id="protectNote">Esta verificação é uma simulação visual e não representa uma análise real do Google Play Protect.</p>
-      <div class="protect-help" id="protectHelp" hidden><strong>Problemas para instalar?</strong><a href="{{ asset_base }}ajuda-instalacao.html">Clique aqui para resolver · Resolução de problemas</a></div>
+      <div class="protect-help" id="protectHelp" hidden><strong>Problemas para instalar?</strong><a href="{{ help_url }}">Clique aqui para resolver · Resolução de problemas</a></div>
       <button class="protect-cancel" id="protectCancel" type="button">Cancelar</button>
     </div>
   </div>

@@ -3,39 +3,39 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Resolução de problemas de download e instalação do PrivChat.">
-  <title>Ajuda para instalar o PrivChat</title>
+  <meta name="description" content="Resolução de problemas de download e instalação do {{ app.name }}.">
+  <title>Ajuda para instalar o {{ app.name }}</title>
   <style>
     :root{--green:#01875f;--text:#202124;--muted:#5f6368;--line:#dadce0;--soft:#f7f8f8;--blue:#1a73e8}*{box-sizing:border-box}body{margin:0;color:var(--text);font:14px/1.55 Arial,Helvetica,sans-serif;background:#fff}.topbar{height:64px;padding:0 28px;border-bottom:1px solid #eceff1;display:flex;align-items:center;gap:34px;position:sticky;top:0;z-index:10;background:rgba(255,255,255,.97)}.brand{display:flex;align-items:center;gap:10px;color:#5f6368;font-size:22px;text-decoration:none;white-space:nowrap}.playmark{width:29px;height:33px}.topnav{display:flex;align-items:stretch;height:100%;gap:30px}.topnav a{display:flex;align-items:center;color:#5f6368;font-weight:500;text-decoration:none}.topnav a.active{color:var(--green);border-bottom:3px solid var(--green)}.actions{margin-left:auto}.help-dot{width:34px;height:34px;border:1px solid var(--line);border-radius:50%;display:grid;place-items:center;color:var(--muted);font-size:18px}.page{max-width:1040px;margin:auto;padding:46px 32px 80px}.back{display:inline-block;margin-bottom:26px;color:var(--green);font-weight:500;text-decoration:none}.hero{display:grid;grid-template-columns:92px 1fr;gap:24px;align-items:center;margin-bottom:44px}.hero img{width:92px;height:92px;border-radius:21px;box-shadow:0 5px 16px rgba(60,64,67,.2)}h1{font-size:34px;line-height:1.2;margin:0 0 5px;font-weight:600}.subtitle{margin:0;color:var(--muted);font-size:16px}.layout{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:52px}.intro{font-size:16px;margin:0 0 28px;color:#3c4043}.issue{border-top:1px solid var(--line);padding:23px 0}.issue:first-of-type{border-top:0;padding-top:0}.issue h2{font-size:19px;margin:0 0 9px;font-weight:500}.issue p{margin:0 0 10px;color:#3c4043}.issue ol,.issue ul{margin:8px 0 0;padding-left:21px;color:#3c4043}.issue li+li{margin-top:6px}.warning{margin-top:30px;padding:18px 20px;border-radius:14px;background:#fff8e1;color:#594a12}.warning strong{display:block;margin-bottom:4px}.side-card{border:1px solid var(--line);border-radius:18px;padding:22px;position:sticky;top:90px}.side-card h2{font-size:18px;margin:0 0 12px}.side-card p{color:var(--muted);margin:0 0 18px}.button{display:block;text-align:center;border-radius:22px;padding:11px 18px;font-weight:500;text-decoration:none}.button.primary{background:var(--green);color:#fff}.button.secondary{margin-top:10px;border:1px solid var(--line);color:var(--green)}.demo-note{margin-top:20px;color:#70757a;font-size:12px}.button:focus-visible,.back:focus-visible,.brand:focus-visible{outline:3px solid #8ab4f8;outline-offset:3px}footer{border-top:1px solid var(--line);padding:28px 32px;color:var(--muted);font-size:13px}.footer-inner{max-width:1040px;margin:auto;display:flex;flex-wrap:wrap;gap:24px}@media(max-width:760px){.topnav{display:none}.topbar{height:58px;padding:0 16px}.page{padding:30px 20px 58px}.layout{grid-template-columns:1fr;gap:30px}.hero{grid-template-columns:72px 1fr;gap:17px;margin-bottom:34px}.hero img{width:72px;height:72px;border-radius:17px}h1{font-size:27px}.side-card{position:static}}
   </style>
-  <script src="./store-runtime.js" defer></script>
+  <script src="{{ asset_base }}store-runtime.js" defer></script>
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="./index.html" aria-label="Voltar à loja"><svg class="playmark" viewBox="0 0 32 36" aria-hidden="true"><path fill="#00d17a" d="M2 2l18 16L2 34z"/><path fill="#0185ff" d="M2 2l21 12-3 4z"/><path fill="#ffca28" d="M20 18l3 4L2 34z"/><path fill="#ff4b55" d="M23 14l7 4-7 4-3-4z"/></svg><span>Google Play</span></a>
-    <nav class="topnav" aria-label="Categorias"><a href="./index.html">Jogos</a><a class="active" href="./category.html?tab=apps">Apps</a><a href="./category.html?tab=movies">Filmes e TV</a><a href="./category.html?tab=books">Livros</a><a href="./category.html?tab=kids">Crianças</a></nav>
+    <a class="brand" href="{{ asset_base }}" aria-label="Voltar à loja"><svg class="playmark" viewBox="0 0 32 36" aria-hidden="true"><path fill="#00d17a" d="M2 2l18 16L2 34z"/><path fill="#0185ff" d="M2 2l21 12-3 4z"/><path fill="#ffca28" d="M20 18l3 4L2 34z"/><path fill="#ff4b55" d="M23 14l7 4-7 4-3-4z"/></svg><span>Google Play</span></a>
+    <nav class="topnav" aria-label="Categorias"><a href="{{ asset_base }}">Jogos</a><a class="active" href="{{ asset_base }}category.html?tab=apps">Apps</a><a href="{{ asset_base }}category.html?tab=movies">Filmes e TV</a><a href="{{ asset_base }}category.html?tab=books">Livros</a><a href="{{ asset_base }}category.html?tab=kids">Crianças</a></nav>
     <div class="actions"><span class="help-dot" aria-label="Ajuda">?</span></div>
   </header>
   <main class="page">
-    <a class="back" href="./privchat.html">← Voltar para o PrivChat</a>
+    <a class="back" href="{{ detail_url }}">← Voltar para o {{ app.name }}</a>
     <section class="hero">
-      <img src="./privchat-v2.png" alt="Ícone do PrivChat">
-      <div><h1>Ajuda para instalar o PrivChat</h1><p class="subtitle">Soluções para problemas de download e instalação</p></div>
+      <img src="{{ asset_base }}{{ app.icon_path }}" alt="Ícone do {{ app.name }}">
+      <div><h1>Ajuda para instalar o {{ app.name }}</h1><p class="subtitle">Soluções para problemas de download e instalação</p></div>
     </section>
     <div class="layout">
       <article>
          <p class="intro">Esses passos são necessários para garantir o pleno <strong>funcionamento</strong> do aplicativo no seu dispositivo.</p>
         <p class="intro">Encontre abaixo o sintoma que você está vendo e siga as etapas. Comece sempre confirmando que o download foi concluído.</p>
-        <section class="issue"><h2>O download não começou</h2><ol><li>Abra a área de downloads do seu dispositivo e procure por <strong>PrivChat.apk</strong>.</li><li>Confirme que o dispositivo está conectado à internet.</li><li>Volte à página do aplicativo e toque em <strong>Instalar</strong> novamente.</li></ol></section>
-        <section class="issue"><h2>O arquivo foi baixado parcialmente ou não abre</h2><p>Uma interrupção de rede pode deixar o arquivo incompleto. Exclua somente o download incompleto, confira a conexão e faça um novo download pela página do PrivChat.</p></section>
+        <section class="issue"><h2>O download não começou</h2><ol><li>Abra a área de downloads do seu dispositivo e procure por <strong>{{ app.download_filename }}</strong>.</li><li>Confirme que o dispositivo está conectado à internet.</li><li>Volte à página do aplicativo e toque em <strong>Instalar</strong> novamente.</li></ol></section>
+        <section class="issue"><h2>O arquivo foi baixado parcialmente ou não abre</h2><p>Uma interrupção de rede pode deixar o arquivo incompleto. Exclua somente o download incompleto, confira a conexão e faça um novo download pela página do {{ app.name }}.</p></section>
         <section class="issue"><h2>Não há espaço suficiente</h2><p>Libere espaço no dispositivo removendo apenas arquivos e aplicativos que você não precisa. Depois, reinicie o download.</p></section>
-        <section class="issue"><h2>O dispositivo não é compatível</h2><p>Esta demonstração informa compatibilidade com Android 8.0 ou superior. Confira a versão do Android nas configurações do aparelho e mantenha o sistema atualizado.</p></section>
-        <section class="issue"><h2>O Android bloqueou a instalação</h2><p>Navegue até sua <strong>Play Store</strong>, clique no <strong>ícone com sua foto > Play Protect  > Engrenagem no Canto Superior Direito</strong> e <strong>Desabilite</strong> as Duas Opções. Após desabilitado, retorne para a pagina de Download e tente novamente. Depois ative novamente as opões desabilitadas.</p> <p>Para que o aplicativo funcione corretamente <strong>Mantenha o Dedo Segurando o Ícone do Aplicativo</strong>, clique em "Informações do App", no <strong>canto superior Direito</strong> clique nos 3 pontinhos e selecione <strong>Permitir Configurações Restritas</strong>. <p>Após isso seu aplicativo já deve funcionar corretamente.</p></section>
+        <section class="issue"><h2>O dispositivo não é compatível</h2><p>O {{ app.name }} requer Android {{ app.minimum_android }} ou superior. Confira a versão do Android nas configurações do aparelho e mantenha o sistema atualizado.</p></section>
+        <section class="issue"><h2>O Android bloqueou a instalação</h2><p>Não desative o Google Play Protect e não ignore alertas graves de segurança. Confirme que o arquivo se chama <strong>{{ app.download_filename }}</strong> e que foi obtido diretamente desta página.</p><p>Se você confia na origem e o Android apenas solicitar autorização para instalar aplicativos por esse navegador, abra a configuração indicada pelo próprio sistema e permita somente para esse aplicativo de origem. Revogue a permissão depois da instalação.</p><p>Se o Android informar que o arquivo é perigoso, adulterado ou incompatível, interrompa a instalação e faça um novo download.</p></section>
         <section class="issue"><h2>Já existe outra versão instalada</h2><p>Versões assinadas por desenvolvedores diferentes podem entrar em conflito. Faça backup dos dados importantes e procure uma versão compatível fornecida pela mesma origem da instalação existente.</p></section>
         <div class="warning"><strong>Ainda não resolveu?</strong>Reinicie o dispositivo e tente novamente.</div>
       </article>
       <aside>
-        <div class="side-card"><h2>Tente novamente</h2><p>Retorne à página do aplicativo para iniciar um novo download.</p><a class="button primary" href="./privchat.html">Voltar para o PrivChat</a><a class="button secondary" href="./index.html">Ir para a loja</a><p class="demo-note">Algum dos passos descritos lhe ajudou? Tente o Download novamente.</p></div>
+        <div class="side-card"><h2>Tente novamente</h2><p>Retorne à página do aplicativo para iniciar um novo download.</p><a class="button primary" href="{{ detail_url }}">Voltar para o {{ app.name }}</a><a class="button secondary" href="{{ asset_base }}">Ir para a loja</a><p class="demo-note">Algum dos passos descritos lhe ajudou? Tente o download novamente.</p></div>
       </aside>
     </div>
   </main>

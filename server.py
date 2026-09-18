@@ -88,6 +88,11 @@ def init_database() -> None:
                 category TEXT NOT NULL DEFAULT 'Apps',
                 tags TEXT NOT NULL DEFAULT '',
                 rating REAL NOT NULL DEFAULT 5.0 CHECK (rating >= 0 AND rating <= 5),
+                rating_5_pct REAL NOT NULL DEFAULT 83.0,
+                rating_4_pct REAL NOT NULL DEFAULT 11.0,
+                rating_3_pct REAL NOT NULL DEFAULT 4.0,
+                rating_2_pct REAL NOT NULL DEFAULT 1.5,
+                rating_1_pct REAL NOT NULL DEFAULT 0.5,
                 rating_count_label TEXT NOT NULL DEFAULT 'Sem avaliações',
                 downloads_label TEXT NOT NULL DEFAULT 'Novo',
                 age_rating TEXT NOT NULL DEFAULT 'L',
@@ -134,9 +139,25 @@ def init_database() -> None:
                 ON reviews(app_id, published, display_order);
             """
         )
+        ensure_app_columns(connection)
         count = connection.execute("SELECT COUNT(*) FROM apps").fetchone()[0]
         if count == 0:
             seed_privchat(connection)
+
+
+def ensure_app_columns(connection: sqlite3.Connection) -> None:
+    """Aplica migrações aditivas simples em bancos já existentes."""
+    existing = {row["name"] for row in connection.execute("PRAGMA table_info(apps)").fetchall()}
+    additions = {
+        "rating_5_pct": "REAL NOT NULL DEFAULT 83.0",
+        "rating_4_pct": "REAL NOT NULL DEFAULT 11.0",
+        "rating_3_pct": "REAL NOT NULL DEFAULT 4.0",
+        "rating_2_pct": "REAL NOT NULL DEFAULT 1.5",
+        "rating_1_pct": "REAL NOT NULL DEFAULT 0.5",
+    }
+    for column, definition in additions.items():
+        if column not in existing:
+            connection.execute(f"ALTER TABLE apps ADD COLUMN {column} {definition}")
 
 
 def seed_privchat(connection: sqlite3.Connection) -> None:
@@ -195,6 +216,9 @@ def row_to_app(row: sqlite3.Row, reviews: list[sqlite3.Row] | None = None) -> di
     result["tags_list"] = [tag.strip() for tag in result.get("tags", "").split(",") if tag.strip()]
     result["safety_items"] = [item.strip() for item in result.get("safety_text", "").split("|") if item.strip()]
     result["rating_display"] = f"{float(result['rating']):.1f}".replace(".", ",")
+    result["rating_distribution"] = [
+        (stars, float(result[f"rating_{stars}_pct"])) for stars in range(5, 0, -1)
+    ]
     result["reviews"] = [dict(review) for review in (reviews or [])]
     return result
 
@@ -320,10 +344,21 @@ def app_payload(existing: sqlite3.Row | None = None) -> dict[str, Any]:
     if not name or not developer:
         raise ValueError("Nome e desenvolvedor são obrigatórios.")
 
+    rating = max(0.0, min(5.0, form_float("rating", 5.0)))
+    rating_distribution = {
+        f"rating_{stars}_pct": form_float(
+            f"rating_{stars}_pct", {5: 83.0, 4: 11.0, 3: 4.0, 2: 1.5, 1: 0.5}[stars]
+        )
+        for stars in range(5, 0, -1)
+    }
+    if any(value < 0 or value > 100 for value in rating_distribution.values()):
+        raise ValueError("Cada percentual de estrelas deve estar entre 0 e 100.")
+    if abs(sum(rating_distribution.values()) - 100.0) > 0.05:
+        raise ValueError("A distribuição de 5, 4, 3, 2 e 1 estrela deve totalizar 100%.")
+
     icon_path = save_upload("icon", slug, IMAGE_EXTENSIONS, "icon") or existing_data.get("icon_path") or "fallback-app.svg"
     banner_path = save_upload("banner", slug, IMAGE_EXTENSIONS, "banner") or existing_data.get("banner_path")
     apk_path = save_upload("apk", slug, APK_EXTENSIONS, "app") or existing_data.get("apk_path")
-    rating = max(0.0, min(5.0, form_float("rating", 5.0)))
     download_filename = form_text("download_filename", f"{name}.apk")
     if not download_filename.lower().endswith(".apk"):
         download_filename += ".apk"
@@ -338,6 +373,7 @@ def app_payload(existing: sqlite3.Row | None = None) -> dict[str, Any]:
         "category": form_text("category", "Apps"),
         "tags": form_text("tags"),
         "rating": rating,
+        **rating_distribution,
         "rating_count_label": form_text("rating_count_label", "Sem avaliações"),
         "downloads_label": form_text("downloads_label", "Novo"),
         "age_rating": form_text("age_rating", "L"),
@@ -396,7 +432,17 @@ def app_detail(slug: str) -> Any:
     selected = get_app(slug)
     if selected is None:
         return render_template("404.html"), 404
-    return render_template("privchat.html", app=selected, asset_base="../../")
+    return render_template("privchat.html", app=selected, asset_base="../../", help_url="./ajuda/")
+
+
+@app.route(f"{DEFAULT_PREFIX}/apps/<slug>/ajuda/")
+def app_install_help(slug: str) -> Any:
+    selected = get_app(slug)
+    if selected is None:
+        return render_template("404.html"), 404
+    return render_template(
+        "ajuda-instalacao.html", app=selected, asset_base="../../../", detail_url="../"
+    )
 
 
 @app.route(f"{DEFAULT_PREFIX}/privchat.html")
@@ -404,7 +450,19 @@ def legacy_privchat() -> Any:
     selected = get_app("privchat")
     if selected is None:
         return render_template("404.html"), 404
-    return render_template("privchat.html", app=selected, asset_base="./")
+    return render_template(
+        "privchat.html", app=selected, asset_base="./", help_url="./ajuda-instalacao.html"
+    )
+
+
+@app.route(f"{DEFAULT_PREFIX}/ajuda-instalacao.html")
+def legacy_install_help() -> Any:
+    selected = get_app("privchat")
+    if selected is None:
+        return render_template("404.html"), 404
+    return render_template(
+        "ajuda-instalacao.html", app=selected, asset_base="./", detail_url="./privchat.html"
+    )
 
 
 @app.route(f"{DEFAULT_PREFIX}/download/<slug>/")

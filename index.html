@@ -152,13 +152,22 @@
       <button class="chip" data-device="Fone de ouvido XR"><svg viewBox="0 0 24 24"><path d="M4 7h16l2 4v6h-6l-2-3h-4l-2 3H2v-6l2-4zm1 2-1 3v3h3l2-3h6l2 3h3v-3l-1-3H5z"/></svg>Fone de ouvido XR</button>
     </div>
 
+    {% if real_apps %}
+    <section class="section" aria-labelledby="managed-apps-title">
+      <div class="section-head"><div><h2 id="managed-apps-title">Apps em destaque</h2><p class="section-sub">Aplicativos disponíveis nesta loja</p></div><button class="arrow" data-scroll="managedAppsTrack" aria-label="Ver mais"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7 1.4 1.4L18.8 12 10.4 3.6 9 5z"/></svg></button></div>
+      <div class="app-track" id="managedAppsTrack">
+        {% for app in real_apps %}<article class="app-card game" data-title="{{ app.name }}" data-category="{{ app.category }}" data-rating="{{ app.rating_display }}" data-icon="./{{ app.icon_path }}" data-target="./apps/{{ app.slug }}/"><img src="./{{ app.icon_path }}" alt="Ícone de {{ app.name }}"><strong>{{ app.name }}</strong><span>{{ app.category }}</span><span>{{ app.rating_display }} ★</span></article>{% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
     <section class="section" aria-labelledby="indie-title">
       <div class="section-head"><div><h2 id="indie-title">Espaço indie</h2><p class="section-sub">Curta os melhores jogos indie</p></div><button class="arrow" data-scroll="heroTrack" aria-label="Ver mais"><svg viewBox="0 0 24 24"><path d="M9 5l7 7-7 7 1.4 1.4L18.8 12 10.4 3.6 9 5z"/></svg></button></div>
       <div class="hero-track" id="heroTrack">
-        <article class="hero game privchat-hero" data-title="PrivChat" data-category="Comunicação • Privacidade" data-rating="4,7" data-icon="./privchat-v2.png" data-apk="app.apk">
-          <img class="privchat-art" src="./privchat-v2.png" alt="Ícone do PrivChat">
-          <div class="hero-copy"><span class="eyebrow">Em destaque</span><h3>Converse com liberdade e privacidade</h3><p>Mensagens rápidas, grupos e chamadas em uma experiência simples e segura.</p><div class="game-id"><img src="./privchat-v2.png" alt=""><div><strong>PrivChat</strong><small>4,7 ★ · 200 mil+ downloads</small></div></div></div>
-        </article>
+        {% if featured_app %}<article class="hero game privchat-hero" data-title="{{ featured_app.name }}" data-category="{{ featured_app.category }}" data-rating="{{ featured_app.rating_display }}" data-icon="./{{ featured_app.icon_path }}" data-target="./apps/{{ featured_app.slug }}/">
+          <img class="privchat-art" src="./{{ featured_app.icon_path }}" alt="Ícone do {{ featured_app.name }}">
+          <div class="hero-copy"><span class="eyebrow">Em destaque</span><h3>{{ featured_app.showcase_title or featured_app.name }}</h3><p>{{ featured_app.short_description }}</p><div class="game-id"><img src="./{{ featured_app.icon_path }}" alt=""><div><strong>{{ featured_app.name }}</strong><small>{{ featured_app.rating_display }} ★ · {{ featured_app.downloads_label }} downloads</small></div></div></div>
+        </article>{% endif %}
         <article class="hero game" data-title="Balatro" data-category="Cartas • Batalha de cartas" data-rating="4,7" data-icon="https://play-lh.googleusercontent.com/A3TixeAj-tHxxvfuIPvkPZxXGdG7c9wynmbZq0m4HSwcogS4KdLn1Ia69_xZ67hL2wwEySv2--O5f79PVYRy=w240-h480">
           <img class="hero-bg" src="https://play-lh.googleusercontent.com/aBZxyrdzbus7uWY4_OS8-EImZxVmcN62oEntu5-By0Wr2g4ic6YpKJJzxlKi5fXIiEMnUUxJFzRdB0m3-o3lleU=w900-h500" alt="Cartas no jogo Balatro">
           <div class="hero-copy"><span class="eyebrow">Jogo premiado</span><h3>Pôquer, estratégia e combinações absurdas</h3><p>Monte seu baralho e crie pontuações cada vez maiores.</p><div class="game-id"><img src="https://play-lh.googleusercontent.com/A3TixeAj-tHxxvfuIPvkPZxXGdG7c9wynmbZq0m4HSwcogS4KdLn1Ia69_xZ67hL2wwEySv2--O5f79PVYRy=w240-h480" alt=""><div><strong>Balatro</strong><small>4,7 ★ · US$ 9,99</small></div></div></div>
@@ -235,7 +244,7 @@
     searchInput.addEventListener('input',()=>{const q=searchInput.value.toLowerCase().trim();document.querySelectorAll('.game').forEach(x=>x.style.display=!q||x.dataset.title.toLowerCase().includes(q)?'':'none')});
     const modal=document.getElementById('modal');
     let currentApk='';
-    document.addEventListener('click',e=>{const game=e.target.closest('.game');if(!game)return;if(game.dataset.title==='PrivChat'){window.location.href='./privchat.html';return}currentApk=game.dataset.apk||'';document.getElementById('dialogTitle').textContent=game.dataset.title;document.getElementById('dialogCategory').textContent=game.dataset.category;document.getElementById('dialogRating').textContent=`${game.dataset.rating} ★`;document.getElementById('dialogIcon').src=game.dataset.icon;document.getElementById('install').textContent='Instalar';modal.classList.add('open');modal.setAttribute('aria-hidden','false')});
+    document.addEventListener('click',e=>{const game=e.target.closest('.game');if(!game)return;if(game.dataset.target){window.location.href=game.dataset.target;return}if(game.dataset.title==='PrivChat'){window.location.href='./privchat.html';return}currentApk=game.dataset.apk||'';document.getElementById('dialogTitle').textContent=game.dataset.title;document.getElementById('dialogCategory').textContent=game.dataset.category;document.getElementById('dialogRating').textContent=`${game.dataset.rating} ★`;document.getElementById('dialogIcon').src=game.dataset.icon;document.getElementById('install').textContent='Instalar';modal.classList.add('open');modal.setAttribute('aria-hidden','false')});
     function closeModal(){modal.classList.remove('open');modal.setAttribute('aria-hidden','true')}
     document.getElementById('modalClose').onclick=closeModal;
     modal.addEventListener('click',e=>{if(e.target===modal)closeModal()});

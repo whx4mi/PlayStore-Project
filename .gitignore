@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.venv/
+data/*.db
+data/*.db-shm
+data/*.db-wal
+media/*
+!media/.gitkeep

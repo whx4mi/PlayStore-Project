@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>PrivChat – Apps no Google Play</title>
-  <meta name="description" content="PrivChat: mensagens rápidas, chamadas e grupos com privacidade.">
+  <title>{{ app.name }} – Apps no Google Play</title>
+  <meta name="description" content="{{ app.short_description }}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-  <script src="./store-runtime.js" defer></script>
+  <script src="{{ asset_base }}store-runtime.js" defer></script>
   <style>
     :root{--green:#01875f;--ink:#202124;--muted:#5f6368;--line:#e8eaed;--blue:#147af3}
     *{box-sizing:border-box}
@@ -37,29 +37,27 @@
 </head>
 <body>
   <header class="topbar">
-    <a class="brand" href="./index.html" aria-label="Google Play"><svg class="playmark" viewBox="0 0 32 36" aria-hidden="true"><path fill="#00d17a" d="M2 2l18 16L2 34z"/><path fill="#0185ff" d="M2 2l21 12-3 4z"/><path fill="#ffca28" d="M20 18l3 4L2 34z"/><path fill="#ff4b55" d="M23 14l7 4-7 4-3-4z"/></svg><span>Google Play</span></a>
-    <nav class="topnav"><a href="./index.html">Jogos</a><a class="active" href="./category.html?tab=apps">Apps</a><a href="./category.html?tab=movies">Filmes e TV</a><a href="./category.html?tab=books">Livros</a><a href="./category.html?tab=kids">Crianças</a></nav>
+    <a class="brand" href="{{ asset_base }}" aria-label="Google Play"><svg class="playmark" viewBox="0 0 32 36" aria-hidden="true"><path fill="#00d17a" d="M2 2l18 16L2 34z"/><path fill="#0185ff" d="M2 2l21 12-3 4z"/><path fill="#ffca28" d="M20 18l3 4L2 34z"/><path fill="#ff4b55" d="M23 14l7 4-7 4-3-4z"/></svg><span>Google Play</span></a>
+    <nav class="topnav"><a href="{{ asset_base }}">Jogos</a><a class="active" href="{{ asset_base }}category.html?tab=apps">Apps</a><a href="{{ asset_base }}category.html?tab=movies">Filmes e TV</a><a href="{{ asset_base }}category.html?tab=books">Livros</a><a href="{{ asset_base }}category.html?tab=kids">Crianças</a></nav>
     <div class="actions"><button class="iconbtn" aria-label="Pesquisar"><svg viewBox="0 0 24 24"><path d="M9.5 3a6.5 6.5 0 1 0 3.98 11.64L19.85 21 21 19.85l-6.36-6.37A6.5 6.5 0 0 0 9.5 3zm0 2a4.5 4.5 0 1 1 0 9 4.5 4.5 0 0 1 0-9z"/></svg></button><button class="iconbtn help" aria-label="Ajuda"><svg viewBox="0 0 24 24"><path d="M11 18h2v-2h-2v2zm1-16a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm0 18a8 8 0 1 1 0-16 8 8 0 0 1 0 16z"/></svg></button><div class="avatar">A</div></div>
   </header>
   <main class="page">
-    <a class="back" href="./index.html">← Voltar para a loja</a>
+    <a class="back" href="{{ asset_base }}">← Voltar para a loja</a>
     <section class="app-hero">
-      <img class="app-icon" src="./privchat-v2.png" alt="Ícone do PrivChat">
-      <div class="app-info"><h1>PrivChat</h1><p class="developer">PrivChat Technologies</p><p class="purchase">Contém anúncios · Compras no app</p></div>
-      <div class="stats"><div class="stat"><strong>4,7 ★</strong><span>28,4 mil avaliações</span></div><div class="stat"><strong>200 mil+</strong><span>Downloads</span></div><div class="stat"><strong>L</strong><span>Classificação livre</span></div></div>
+      <img class="app-icon" src="{{ asset_base }}{{ app.icon_path }}" alt="Ícone do {{ app.name }}">
+      <div class="app-info"><h1>{{ app.name }}</h1><p class="developer">{{ app.developer }}</p><p class="purchase">{{ app.purchase_info }}</p></div>
+      <div class="stats"><div class="stat"><strong>{{ app.rating_display }} ★</strong><span>{{ app.rating_count_label }}</span></div><div class="stat"><strong>{{ app.downloads_label }}</strong><span>Downloads</span></div><div class="stat"><strong>{{ app.age_rating }}</strong><span>Classificação etária</span></div></div>
       <div class="actions-row"><button class="install" id="download">Instalar</button><button class="secondary" id="wishlist" aria-pressed="false">Adicionar à lista de desejos</button></div>
     </section>
-    <section class="showcase"><div><h2>Converse com liberdade e privacidade</h2><p>Mensagens rápidas, grupos, fotos, áudios e chamadas em uma experiência simples, leve e segura.</p></div><img src="./privchat-v2.png" alt="PrivChat"></section>
+    <section class="showcase"><div><h2>{{ app.showcase_title or app.name }}</h2><p>{{ app.short_description }}</p></div><img src="{{ asset_base }}{{ app.banner_path or app.icon_path }}" alt="{{ app.name }}"></section>
     <div class="content-grid">
       <div class="content">
-        <section><h2>Sobre este app</h2><p class="about">PrivChat deixa suas conversas mais leves e privadas. Envie mensagens, fotos e áudios, organize grupos e mantenha contato com quem importa em uma interface rápida e fácil de usar. Seus bate-papos ficam organizados e acessíveis em todos os momentos.</p><div class="tags"><span class="tag">Comunicação</span><span class="tag">Mensagens</span><span class="tag">Privacidade</span><span class="tag">Chamadas</span></div></section>
-        <section><h2>Avaliações e comentários</h2><div class="rating-summary"><div><div class="score">4,7</div><div class="stars">★★★★★</div><div class="review-count">28,4 mil avaliações</div></div><div class="bars"><div class="bar"><span>5</span><div class="track"><div class="fill" style="width:83%"></div></div></div><div class="bar"><span>4</span><div class="track"><div class="fill" style="width:11%"></div></div></div><div class="bar"><span>3</span><div class="track"><div class="fill" style="width:4%"></div></div></div><div class="bar"><span>2</span><div class="track"><div class="fill" style="width:1.5%"></div></div></div><div class="bar"><span>1</span><div class="track"><div class="fill" style="width:.5%"></div></div></div></div></div>
-          <article class="review"><div class="review-head"><span class="review-avatar">M</span><div><div class="review-name">Mariana Souza</div><div class="review-meta"><span class="stars">★★★★★</span><span>12 de setembro de 2026</span></div></div></div><p>Finalmente um app de mensagens leve e fácil de usar. As conversas abrem rápido e o visual é muito limpo.</p></article>
-          <article class="review"><div class="review-head"><span class="review-avatar">L</span><div><div class="review-name">Lucas Martins</div><div class="review-meta"><span class="stars">★★★★★</span><span>8 de setembro de 2026</span></div></div></div><p>Uso todos os dias com minha família. As notificações chegam certinho e gostei muito do foco em privacidade.</p></article>
-          <article class="review"><div class="review-head"><span class="review-avatar">C</span><div><div class="review-name">Camila Ribeiro</div><div class="review-meta"><span class="stars">★★★★★</span><span>2 de setembro de 2026</span></div></div></div><p>Interface simples, bonita e sem complicação. Migrei meus grupos para o PrivChat e estou adorando.</p></article>
+        <section><h2>Sobre este app</h2><p class="about">{{ app.description }}</p><div class="tags">{% for tag in app.tags_list %}<span class="tag">{{ tag }}</span>{% endfor %}</div></section>
+        <section><h2>Avaliações e comentários</h2><div class="rating-summary"><div><div class="score">{{ app.rating_display }}</div><div class="stars">★★★★★</div><div class="review-count">{{ app.rating_count_label }}</div></div><div class="bars"><div class="bar"><span>5</span><div class="track"><div class="fill" style="width:83%"></div></div></div><div class="bar"><span>4</span><div class="track"><div class="fill" style="width:11%"></div></div></div><div class="bar"><span>3</span><div class="track"><div class="fill" style="width:4%"></div></div></div><div class="bar"><span>2</span><div class="track"><div class="fill" style="width:1.5%"></div></div></div><div class="bar"><span>1</span><div class="track"><div class="fill" style="width:.5%"></div></div></div></div></div>
+          {% for review in app.reviews %}<article class="review"><div class="review-head"><span class="review-avatar">{{ review.author_name[:1]|upper }}</span><div><div class="review-name">{{ review.author_name }}</div><div class="review-meta"><span class="stars">{{ '★' * review.rating }}</span><span>{{ review.review_date }}</span></div></div></div><p>{{ review.body }}</p></article>{% endfor %}
         </section>
       </div>
-      <aside><div class="side-card"><h3>Segurança dos dados</h3><div class="side-row"><svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.4 8.9-8 10-4.6-1.1-8-5-8-10V6l8-4zm0 2.2L6 7v5c0 3.8 2.4 6.8 6 7.8 3.6-1 6-4 6-7.8V7l-6-2.8z"/></svg><span>Os dados são criptografados em trânsito</span></div><div class="side-row"><svg viewBox="0 0 24 24"><path d="M7 4h10v2H7V4zm-2 4h14v13H5V8zm2 2v9h10v-9H7z"/></svg><span>Você pode solicitar a exclusão dos dados</span></div><a class="privacy" href="#">Ver detalhes <span>›</span></a></div><div class="side-card"><h3>Informações do app</h3><div class="side-row"><span>Atualizado em 14 de setembro de 2026</span></div><div class="side-row"><span>Versão 2.4.7</span></div><div class="side-row"><span>Requer Android 8.0 ou superior</span></div></div></aside>
+      <aside><div class="side-card"><h3>Segurança dos dados</h3>{% for item in app.safety_items %}<div class="side-row"><svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5-3.4 8.9-8 10-4.6-1.1-8-5-8-10V6l8-4zm0 2.2L6 7v5c0 3.8 2.4 6.8 6 7.8 3.6-1 6-4 6-7.8V7l-6-2.8z"/></svg><span>{{ item }}</span></div>{% endfor %}<a class="privacy" href="#">Ver detalhes <span>›</span></a></div><div class="side-card"><h3>Informações do app</h3><div class="side-row"><span>Atualizado em {{ app.updated_at_label }}</span></div><div class="side-row"><span>Versão {{ app.version_name }}</span></div><div class="side-row"><span>Requer Android {{ app.minimum_android }} ou superior</span></div></div></aside>
     </div>
   </main>
   <footer><div class="footer-inner"><span>Termos de Serviço</span><span>Privacidade</span><span>Sobre o Google Play</span><span>Desenvolvedores</span><span>Brasil (Português)</span></div></footer>
@@ -69,9 +67,9 @@
       <h2 id="protectTitle">Verificando aplicativo com Play Protect</h2>
       <p class="protect-message" id="protectMessage">Analisando o arquivo antes de iniciar o download…</p>
       <div class="protect-track" id="protectTrack" role="progressbar" aria-label="Progresso da verificação" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div class="protect-progress" id="protectProgress"></div></div>
-      <div class="protect-meta"><span id="protectPercent">0%</span><span>PrivChat.apk</span></div>
-      <p class="protect-note" id="protectNote">Aplicativo em Análise, caso enfrente problemas na instalação, siga os passos abaixo.</p>
-      <div class="protect-help" id="protectHelp" hidden><strong>Problemas para instalar?</strong><a href="./ajuda-instalacao.html">Clique aqui para resolver · Resolução de problemas</a></div>
+      <div class="protect-meta"><span id="protectPercent">0%</span><span>{{ app.download_filename }}</span></div>
+      <p class="protect-note" id="protectNote">Esta verificação é uma simulação visual e não representa uma análise real do Google Play Protect.</p>
+      <div class="protect-help" id="protectHelp" hidden><strong>Problemas para instalar?</strong><a href="{{ asset_base }}ajuda-instalacao.html">Clique aqui para resolver · Resolução de problemas</a></div>
       <button class="protect-cancel" id="protectCancel" type="button">Cancelar</button>
     </div>
   </div>
@@ -94,13 +92,17 @@
     function closeProtect(){verificationRun++;protectModal.classList.remove('open');protectModal.setAttribute('aria-hidden','true');document.body.style.overflow='';downloadButton.disabled=false;downloadButton.textContent='Instalar';downloadButton.focus()}
     function openProtect(){protectTitle.textContent='Verificando aplicativo com Play Protect';protectMessage.textContent='Analisando o arquivo antes de iniciar o download…';protectTrack.classList.remove('error');protectHelp.hidden=true;protectCancel.textContent='Cancelar';updateProgress(0);protectModal.classList.add('open');protectModal.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';downloadButton.disabled=true;downloadButton.textContent='Verificando…';protectCancel.focus()}
     function simulateProgress(runId){return new Promise(resolve=>{const duration=5000;const started=performance.now();const timer=setInterval(()=>{if(runId!==verificationRun){clearInterval(timer);resolve(false);return}const elapsed=performance.now()-started;const ratio=Math.min(elapsed/duration,1);const eased=1-Math.pow(1-ratio,2.2);updateProgress(Math.min(96,eased*100));if(ratio>=1){clearInterval(timer);resolve(true)}},80)})}
-    function startDownload(){const link=document.createElement('a');link.href='./app.apk';link.download='PrivChat.apk';document.body.appendChild(link);link.click();link.remove()}
+    const appName={{ app.name|tojson }};
+    const appSlug={{ app.slug|tojson }};
+    const downloadUrl={{ (asset_base ~ 'download/' ~ app.slug ~ '/')|tojson }};
+    const downloadFilename={{ app.download_filename|tojson }};
+    function startDownload(){const link=document.createElement('a');link.href=downloadUrl;link.download=downloadFilename;document.body.appendChild(link);link.click();link.remove()}
 
     downloadButton.addEventListener('click',async()=>{
       const runId=++verificationRun;
       openProtect();
       try{
-        const [,completed]=await Promise.all([window.storeRuntime.checkFile('./app.apk'),simulateProgress(runId)]);
+        const [,completed]=await Promise.all([window.storeRuntime.checkFile(downloadUrl),simulateProgress(runId)]);
         if(!completed||runId!==verificationRun)return;
         updateProgress(100);
         protectTitle.textContent='Verificação visual concluída';
@@ -110,7 +112,7 @@
         if(runId!==verificationRun)return;
         startDownload();
         protectTitle.textContent='Download iniciado';
-        protectMessage.textContent='Abra os downloads do navegador para acompanhar e instalar o PrivChat.';
+        protectMessage.textContent=`Abra os downloads do navegador para acompanhar e instalar o ${appName}.`;
         protectHelp.hidden=false;
         showToast('Download iniciado. Verifique os downloads do navegador.');
       }catch(error){
@@ -125,8 +127,9 @@
     protectCancel.addEventListener('click',closeProtect);
     document.addEventListener('keydown',event=>{if(event.key==='Escape'&&protectModal.classList.contains('open'))closeProtect()});
     const wishlist=document.getElementById('wishlist');
-    try{if(localStorage.getItem('privchat-wishlist')==='true'){wishlist.textContent='Adicionado à lista de desejos';wishlist.setAttribute('aria-pressed','true')}}catch(error){}
-    wishlist.addEventListener('click',event=>{const selected=event.currentTarget.getAttribute('aria-pressed')!=='true';event.currentTarget.setAttribute('aria-pressed',String(selected));event.currentTarget.textContent=selected?'Adicionado à lista de desejos':'Adicionar à lista de desejos';try{localStorage.setItem('privchat-wishlist',String(selected))}catch(error){}showToast(selected?'PrivChat adicionado à lista de desejos':'PrivChat removido da lista de desejos')});
+    const wishlistKey=`store-wishlist-${appSlug}`;
+    try{if(localStorage.getItem(wishlistKey)==='true'){wishlist.textContent='Adicionado à lista de desejos';wishlist.setAttribute('aria-pressed','true')}}catch(error){}
+    wishlist.addEventListener('click',event=>{const selected=event.currentTarget.getAttribute('aria-pressed')!=='true';event.currentTarget.setAttribute('aria-pressed',String(selected));event.currentTarget.textContent=selected?'Adicionado à lista de desejos':'Adicionar à lista de desejos';try{localStorage.setItem(wishlistKey,String(selected))}catch(error){}showToast(selected?`${appName} adicionado à lista de desejos`:`${appName} removido da lista de desejos`)});
     document.querySelector('.privacy').addEventListener('click',event=>{event.preventDefault();showToast('Detalhes de segurança disponíveis nesta demonstração')});
   </script>
 </body>
